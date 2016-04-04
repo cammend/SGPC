@@ -1,0 +1,10 @@
+{%extends 'base.html'%}
+
+{%block titulo%}Nuevo Departamento{%endblock%}
+
+{%block body%}
+<h1>Nuevo Departamento</h1>
+<form> {% csrf_token %}
+	{{form.as_p}}
+</form>
+{%endblock%}
