@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+
+{%block titulo%}Nuevo Usuario{%endblock%}
+
+{%block body%}
+{%if lista%}
+<ul>
+	{%for l in lista%}
+	<form method="post"> {%csrf_token%}
+	<label>{{l}} - {{l.get_depto}}</label>
+	<input style="display:none;" name="usuario" type="text" value="{{l.id}}"></input>
+	<input type="submit" value="Eliminar"></input></form>
+	{%endfor%}
+</ul>
+{%endif%}
+{%endblock%}

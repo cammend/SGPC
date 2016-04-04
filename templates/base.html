@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{%block titulo%}{%endblock%}</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	{%block encabezado%}{%endblock%}
+</head>
+<body>
+{% if request.user.is_authenticated %}
+<p><strong>Usuario: </strong>{{ request.user }}
+<strong>Tipo: </strong>{{ request.user.get_tipo }}
+<a href="/sgpc/cuentas/salir/">Cerrar Sesión</a>
+{% endif %}
+{%block body%}{%endblock%}
+</p>
+</body>
+</html>
