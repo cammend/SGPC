@@ -43,20 +43,20 @@ def getDeptosUrl():
 
 # Create your models here.
 class ManejadorUsuario(BaseUserManager):
-	def create_user(self, alias, tipoUser, password=None):
+	def create_user(self, alias, password=None):
 		if not alias and not tipoUser:
 			raise ValueError('Debe haber alias y tipo de usuario')
 
 		user = self.model(
 			alias = alias,
-			tipoUser = tipoUser
+			tipoUser = 0
 		)
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
-	def create_superuser(self, alias, tipoUser, password):
-		user = self.create_user(alias, tipoUser, password)
+	def create_superuser(self, alias, password):
+		user = self.create_user(alias, password)
 		user.is_admin = True
 		user.save(using=self._db)
 		return user
@@ -74,7 +74,7 @@ class Usuario(AbstractBaseUser):
 	objects = ManejadorUsuario()
 
 	USERNAME_FIELD = 'alias'
-	REQUIRED_FIELDS = ['tipoUser']
+	REQUIRED_FIELDS = []
 
 	def get_full_name(self):
 		return '%s %s' % (self.nombres, self.apellidos)
