@@ -2,9 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Usuario
+from apps.Deptos.models import Departamento, DeptoUser
 
 class UsuarioForm(forms.ModelForm):
-	departamento = forms.ChoiceField() #le mando 0 como señal de usuario ROOT
+	departamento = forms.ChoiceField()
 	tipo = forms.ChoiceField(label='Tipo de Usuario')
 	password1 = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
 	password2 = forms.CharField(label='Confirmar Contraseña', widget=forms.PasswordInput)
@@ -21,10 +22,14 @@ class UsuarioForm(forms.ModelForm):
 		# Save the provided password in hashed format
 		user = super(UsuarioForm, self).save(commit=False)
 		user.set_password(self.cleaned_data["password1"])
-		user.depto = self.cleaned_data['departamento']
 		user.tipoUser = self.cleaned_data['tipo']
 		if commit:
 			user.save()
+			deptouser = DeptoUser() #instancia del modelo 'DeptoUser'
+			deptouser.usuario = user #le asigno el usuario recien creado
+			idepto = self.cleaned_data['departamento']
+			deptouser.depto = Departamento.objects.filter(id=idepto)[0] #le asigno el depto elegido
+			deptouser.save() #guardamos
 		return user
 
 	class Meta:

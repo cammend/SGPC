@@ -3,13 +3,20 @@
 {%block titulo%}Nuevo Usuario{%endblock%}
 
 {%block body%}
+<nav>
+	<a href="/sgpc/cuentas/">Ver Usuarios</a>
+</nav>
 {%if lista%}
 <ul>
 	{%for l in lista%}
+	<li>
 	<form method="post"> {%csrf_token%}
-	<label>{{l}} - {{l.get_depto}}</label>
-	<input style="display:none;" name="usuario" type="text" value="{{l.id}}"></input>
+	<label>
+<strong>{{l.usuario.nombres}} {{l.usuario.apellidos}} {%if is_root%}- {{l.depto}} {%endif%}-> </strong>
+	</label>
+	<input style="display:none;" name="usuario" type="text" value="{{l.usuario.id}}"></input>
 	<input type="submit" value="Eliminar"></input></form>
+	</li>
 	{%endfor%}
 </ul>
 {%endif%}

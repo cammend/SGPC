@@ -94,11 +94,6 @@ class Usuario(AbstractBaseUser):
 	def __str__(self):
 		return self.alias
 
-	def get_depto(self):
-		if self.depto is None:
-			return self.alias
-		return getStringDepto(self.depto)
-
 	def get_tipo(self):
 		if self.tipoUser is None:
 			return self.alias

@@ -1,7 +1,17 @@
 {%extends 'base.html'%}
 
-{%block titulo%}Nuevo Usuario{%endblock%}
+{%block titulo%}{{titulo}}{%endblock%}
 
 {%block body%}
-<h1>{{request.user.get_depto}}</h1>
+<nav>
+{%if is_admin%}<a href="/sgpc/cuentas/">Ver Usuarios de {{depto}}</a>{%endif%}
+</nav>
+<h1>{{depto}}</h1>
+<p>
+	<h2>Pedidos para gestionar</h2>
+</p>
+
+<p>
+	<h2>Pedidos gestionados</h2>
+</p>
 {%endblock%}

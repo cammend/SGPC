@@ -1,23 +1,23 @@
 from django.shortcuts import render, redirect
-from GestionUser.models import getDeptosUrl, getDeptos
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
-from .models import Departamento
+from .models import Departamento, DeptoUser
 
 # Create your views here.
-def sgpc(request):
-	return redirect('/sgpc/depto/home/')
-
 @login_required
-def home(request, depart):
+def home(request):
 	tipo = request.user.tipoUser
-	if tipo == 0: #si es usuario ROOT
-		return redirect('/sgpc/cuentas/nueva/')
-	deptos_url = getDeptosUrl() #obtener la lista de las urls
-	depto = request.user.depto
-	if depart == 'home':
-		return redirect('/sgpc/depto/'+str(deptos_url[depto]))
-	ctx = {'depto':'d'}
+	ctx = {'titulo':'Gestión'}
+	if tipo == 0: #si es usuario ROOT... no devería ver ésta vista
+		return redirect('/sgpc/cuentas/') #y lo redireccionamos
+	elif tipo == 1:
+		ctx['is_admin'] = True
+
+	#Se crea la página para la gestión de los pedidos dependiendo el Depto
+	d_u = DeptoUser.objects.filter(usuario=request.user)[0] #obtenemos el usuario y el depto al q pertenece
+	ctx['user_depto'] = d_u
+	ctx['usuario'] = d_u.usuario
+	ctx['depto'] = d_u.depto
 	return render(request, 'Deptos/depto.html', ctx)
 
 class NuevoDepto(CreateView):

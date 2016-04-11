@@ -1,6 +1,7 @@
 from django.conf.urls import include, url, patterns
-from .views import home
+from .views import home, NuevoDepto
 
 urlpatterns = patterns('',
-    url(r'^([a-zA-Z_]+)/$', home),
+    url(r'^home/$', home),
+    url(r'^nuevo/$', NuevoDepto.as_view()),
 )

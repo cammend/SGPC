@@ -5,93 +5,86 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import getDeptos, getTipos
-from apps.Deptos.models import Departamento
+from apps.Deptos.models import Departamento, DeptoUser
+from .funciones import *
 
-host = '/sgpc/'
-cuentas = 'cuentas/'
-deps = 'depto/'
+ROOT = 0
+ADMIN = 1
+NORMAL = 2
 
-#ésta función devuelve una lista con los deptos disponibles para el usuario ROOT o una lista
-#con el depto al q pertenece un usuario ADMIN
-def getListaDepto(usuario):
-	dep = getDeptos().copy()
-	print(dep)
-	if usuario.tipoUser == 0: #si el usuario actual es ROOT
-		query = Usuario.objects.filter(tipoUser=1).order_by('depto') #devuelve todos los usuarios ADMIN
-		print(query)
-		aux = 0
-		for u in query:
-			del dep[u.depto-aux] #eliminamos de la lista todos los ADMIN ya creadoss
-			print(dep)
-			aux += 1
-	elif usuario.tipoUser == 1: #si el usuario actual es ADMIN
-		dp = dep.pop(usuario.depto)
-		dep = [dp]
-	return dep
 
-#devuelve una lista con un elemento que dice que tipo de usuario se va a crear
-def getListaTipo(usuario):
-	tip = getTipos().copy()
-	dep = []
-	if usuario.tipoUser == 0: #si el usuario actual es ROOT
-		dp = tip.pop(1)
-		dep = [dp]
-	elif usuario.tipoUser == 1: #si el usuario actual es ADMIN
-		dp = tip.pop(2)
-		dep = [dp]
-	return dep
-
-# Create your views here.
-@login_required
-def crearUsuarioView(request):
-	form = UsuarioForm()
-	choices = getListaDepto(request.user)
-	if not choices:
-		return redirect(host+cuentas+'eliminar/')
-	form.fields['departamento'].choices = choices
-	form.fields['tipo'].choices = getListaTipo(request.user)
-	if request.method == 'POST':
-		form = UsuarioForm(data=request.POST)
-		form.fields['departamento'].choices = getListaDepto(request.user)
-		form.fields['tipo'].choices = getListaTipo(request.user)
-		if form.is_valid():
-			form.save()
-			form = UsuarioForm()
-			form.fields['departamento'].choices = getListaDepto(request.user)
-			form.fields['tipo'].choices = getListaTipo(request.user)
-	if request.user.tipoUser == 2: #si el usuario es NORMAL... redireccionamos
-		return redirect(host+deps+'home/')
-	ctx = {'form':form}
-	return render(request, 'GestionUser/crear_usuario.html', ctx)
+# VISTAS
 
 @login_required
-def eliminarUsuarioView(request):
+def eliminarUsuario(request):
 	users = []
+	ctx = {}
 	if request.method == 'POST':
 		id = request.POST['usuario']
 		Usuario.objects.filter(id=id).delete()
 
-	if request.user.tipoUser == 0: #si el usuario es ROOT
-		users = Usuario.objects.filter(tipoUser=1) #devuelve todos los ADMIN
-	elif request.user.tipoUser == 1: #si el usuario es ADMIN
-		users = Usuario.objects.filter(depto=request.user.depto, tipoUser=2) #devuelve todos lo users del mismo depto
+	if request.user.tipoUser == ROOT: #si el usuario es ROOT
+		#Obtener todos los usuarios ADMIN
+		users = get_admin_users() #devuelve todos los ADMIN
+		ctx['is_root'] = True
+	elif request.user.tipoUser == ADMIN: #si el usuario es ADMIN
+		#Obtener todos los usuarios NORMALES pero pertenencientes al Depto de éste user ADMIN
+		users = get_normal_user_by_depto(request.user)
 	else:
-		return redirect(host+deps)
-	ctx = {'lista':users}
-	print(request.user.depto)
+		return redirect('/sgpc/depto/home/')
+	ctx['lista'] = users
 	return render(request, 'GestionUser/eliminar_usuario.html', ctx)
 
 @login_required
 def crearUsuario(request):
 	form = UsuarioForm()
-	deptos = Departamento.objects.all()
-	print(deptos)
-	return render(request, 'GestionUser/eliminar_usuario.html')
+	form = agregarChoices(form, request)
+	ctx = {'form': form}
+	if request.method == 'POST':
+		form = UsuarioForm(request.POST)
+		form = agregarChoices(form, request)
+		print(request.POST)
+		if form.is_valid():
+			form.save()
+			ctx = {'titulo': 'Guardado', 'h3': 'Usuario Guardado!'}
+			return render(request, 'GestionUser/estado.html', ctx)
+		else:
+			ctx = {'form': form}
+	return render(request, 'GestionUser/crear_usuario.html', ctx)
 
+@login_required
+def index(request):
+	tipo = request.user.tipoUser
+	ctx = {}
+	if tipo == NORMAL:
+		return redirect('/sgpc/depto/home/')
+	elif tipo == ADMIN:
+		#Obtener todos los usuarios Normales registrado por éste usuario ADMIN
+		d_u = get_all_user_by_depto(request.user)
+		depto = get_depto_of_user(request.user)
+		ctx = {'lista':d_u,
+			   'h1':'Todos los Usuarios de '+str(depto)
+		}
+	else:
+		#Obtener todos los usuarios registrados en el sistema
+		d_u = get_all_user()
+		ctx = {'lista':d_u,
+			   'h1':'Todos los Usuarios del sistema'
+		}
+	return render(request, 'GestionUser/index.html', ctx)
+
+
+#vista para INICIAR SESIÓN
 def entrar(request):
+	user = request.user
+	if user.is_authenticated and not user.is_anonymous:
+		if user.tipoUser == ROOT:
+			return redirect('/sgpc/cuentas/')
+		else:
+			return redirect('/sgpc/depto/home/')
 	if request.method == 'POST':
 		form = AuthenticationForm(data=request.POST) #usamos el formulario de auth de django
-		if form.is_valid():
+		if form.is_valid(): #si el form es válido obtenemos el usuario y password
 			u = form.cleaned_data['username']
 			p = form.cleaned_data['password']
 			user = authenticate(username=u, password=p) #comprobamos usuario y contraseña
@@ -100,10 +93,10 @@ def entrar(request):
 				# dependiendo del depto al q pertenece el user así se redirecionará
 				return redirect('/sgpc/depto/home/')
 		else:
-			ctx = {'form':form}
+			ctx = {'form':form} #guardamos el form con los datos resultantes de la validación
 			return render(request, 'GestionUser/entrar.html', ctx)
-	form = AuthenticationForm()
-	ctx = {'form':form}
+	form = AuthenticationForm() #un formulario sin datos del POST
+	ctx = {'form':form} #guardamos un form limpio
 	return render(request, 'GestionUser/entrar.html', ctx)
 
 def salir(request):
