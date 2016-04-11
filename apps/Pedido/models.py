@@ -11,7 +11,7 @@ class Pedido(models.Model):
 	total = models.FloatField(blank=True, null=True)
 
 	def __str__(self):
-		return 'Usuario: %s - Fecha: %s - Estado: %s' % (self.usuario, self.fecha, self.estado)
+		return 'Usuario: %s - Fecha: %s - Estado: %s' % (self.usuario, str(self.fecha), self.estado)
 
 class Producto(models.Model):
 	pedido = models.ForeignKey(Pedido)

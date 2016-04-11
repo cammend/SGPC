@@ -6,11 +6,13 @@
 <nav>
 	<a href="/sgpc/cuentas/">Ver Usuarios</a>
 </nav>
+<h1>{{h1}}</h1>
+<p>Solo se pueden eliminar los usuarios tipo ADMIN!</p>
 {%if lista%}
 <ul>
 	{%for l in lista%}
 	<li>
-	<form method="post"> {%csrf_token%}
+	<form method="post" action="/sgpc/cuentas/eliminar/advertencia/"> {%csrf_token%}
 	<label>
 <strong>{{l.usuario.nombres}} {{l.usuario.apellidos}} {%if is_root%}- {{l.depto}} {%endif%}-> </strong>
 	</label>

@@ -1,0 +1,22 @@
+{%extends 'base.html'%}
+
+{%block titulo%}Nuevo Usuario{%endblock%}
+
+{%block body%}
+<nav>
+	<a href="/sgpc/cuentas/">Ver Usuarios</a>
+</nav>
+<h1>¿Eliminar?</h1>
+<p>Está seguro de eliminar al siguiente usuario:</p>
+{%if usuario%}
+<h2>{{usuario.nombres}} {{usuario.apellidos}}</h2>
+<ul>
+	<li><strong>Alias: </strong>{{usuario.alias}}</li>
+	<li><strong>Correo: </strong>{{usuario.correo}}</li>
+	<li><strong>Departamento: </strong>{{depto}}</li>
+	<form method="get"> 
+	<input style="display:none;" name="usuario" type="text" value="{{usuario.id}}"></input>
+	<input type="submit" value="Eliminar"></input></form>
+</ul>
+{%endif%}
+{%endblock%}

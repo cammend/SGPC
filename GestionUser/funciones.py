@@ -1,11 +1,16 @@
 from apps.Deptos.models import Departamento, DeptoUser
-from .models import Usuario
+from .models import Usuario, getTipos
 
 #Funciones reutilizables
 
 ROOT = 0
 ADMIN = 1
 NORMAL = 2
+
+#Método para obtener un 'Usuario' a partir del id
+def get_user_by_id(id):
+	return Usuario.objects.filter(id=id)[0]
+	#Retorna un Modelo "Usuario"
 
 #Método para obtener el 'Departamento' al q pertenece un usuario
 def get_depto_of_user(user):
@@ -49,6 +54,14 @@ def get_admin_users():
 def get_all_user():
 	return DeptoUser.objects.all().order_by('depto')
 
+#Método para saber si se pueden agregar más usuarios ADMIN
+def can_add_user_admin():
+	num_reg = Usuario.objects.filter(tipoUser=ADMIN).count()
+	num_dep = Departamento.objects.all().count()
+	if num_reg < num_dep:
+		return True
+	return False
+
 #Método para obtener el tipo de usuario que puede registrar otro usuario
 def getTipoUser(user):
 	if user.tipoUser == ROOT: #si el user es ROOT
@@ -59,18 +72,17 @@ def getTipoUser(user):
 		tipoU = getTipos()[2]
 		t = [tipoU]
 		return t
-	
 	return None
 
 #Método para obtener los deptos que no tengan un user ADMIN asignado; o solo el depto del user ADMIN
 def getListaDeptos(user):
-	if user.tipoUser == ROOT:
+	lista = []
+	lista.append(('','-----')) #ésta es la opción por default
+	if user.tipoUser == ROOT and can_add_user_admin():
 		tipos = Usuario.objects.filter(tipoUser=ADMIN) #obtengo todos los usuarios ADMIN
 		depto_user = DeptoUser.objects.filter(usuario=tipos).order_by('depto') #se obtienen todos los usuarios ADMIN asignados a un depto
 		deptos = Departamento.objects.exclude(deptouser=depto_user) #se excluyen todos deptos q ya tengan un user ADMIN asignado
 		#Hasta aquí ya se tienen la lista de deptos q no tienen un user ADMIN asignado
-		lista = []
-		lista.append(('','-----')) #ésta es la opción por default
 		for d in deptos:
 			lista.append((d.id,d.nombre)) #se añaden tuplas a la lista
 		return lista
@@ -79,7 +91,6 @@ def getListaDeptos(user):
 		d = d_u.depto
 		depto = [(d.id,d)]
 		return depto
-	
 	return None
 
 #Método para asignar campos 'choices' a un form

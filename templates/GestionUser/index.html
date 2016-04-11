@@ -3,12 +3,12 @@
 {%block titulo%}Gestión de Usuarios{%endblock%}
 
 {%block body%}
+<nav>
+<a href="/sgpc/cuentas/eliminar/">Eliminar Usuarios</a>
+<a href="/sgpc/cuentas/nueva/">Agregar Usuario</a>
+</nav>
+<h1>{{h1}}</h1>
 {% if lista %}
-	<nav>
-	<a href="/sgpc/cuentas/eliminar/">Eliminar Usuarios</a>
-	<a href="/sgpc/cuentas/nueva/">Agregar Usuario</a>
-	</nav>
-	<h1>{{h1}}</h1>
 	{% for l in lista %}
 	<ol>
 	<p>
@@ -22,5 +22,7 @@
 	</p>
 	</ol>
 	{% endfor %}
+{%else%}
+<p>No hay usuarios registrados</p>
 {% endif%}
 {%endblock%}

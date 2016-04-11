@@ -17,7 +17,7 @@ class Cotizacion(models.Model):
 	fecha = models.DateField()
 
 	def __str__(self):
-		return 'Id pedido: %i - fecha: %s - prioridad: %s' % (self.pedido.id, self.fecha, self.prioridad)
+		return 'Id pedido: %i - fecha: %s - prioridad: %s' % (self.pedido.id, str(self.fecha), self.prioridad)
 
 class ProductosCotizados(models.Model):
 	producto = models.ForeignKey(Producto)

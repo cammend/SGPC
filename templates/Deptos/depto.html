@@ -7,11 +7,19 @@
 {%if is_admin%}<a href="/sgpc/cuentas/">Ver Usuarios de {{depto}}</a>{%endif%}
 </nav>
 <h1>{{depto}}</h1>
+
+{%if gestionar%}
 <p>
 	<h2>Pedidos para gestionar</h2>
+	<ul>
+	{%for p in pedidos_gestion%}
+		<li>{{p}}</li>
+	{%endfor%}
+	</ul>
 </p>
 
 <p>
 	<h2>Pedidos gestionados</h2>
 </p>
+{%endif%}
 {%endblock%}

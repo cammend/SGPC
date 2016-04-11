@@ -5,12 +5,12 @@ from GestionUser.models import Usuario
 
 #Create your models here.
 class Transicion(models.Model):
-	descripcion = models.CharField(max_length=30)
+	descripcion = models.CharField(max_length=50)
 	estadoActual = models.ForeignKey(Estado, related_name='actual')
 	estadoSiguiente = models.ForeignKey(Estado, related_name='siguiente')
 
 	def __str__(self):
-		return '%s --> %s' % (self.estadoActua, self.estadoSiguiente)
+		return '%s - (%s --> %s)' % (self.descripcion, self.estadoActual, self.estadoSiguiente)
 
 	def get_descripcion(self):
 		return self.descripcion
@@ -22,4 +22,4 @@ class HistorialTransicion(models.Model):
 	fecha = models.DateField()
 
 	def __str__(self):
-		return 'Id Pedido: %s - Fecha: %s - Transición: %s' % (self.pedido.id, self.fecha, self.transicion)
+		return 'Id Pedido: %s - Fecha: %s - Transición: %s' % (self.pedido.id, str(self.fecha), self.transicion)

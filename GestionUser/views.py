@@ -15,14 +15,23 @@ NORMAL = 2
 
 # VISTAS
 
+def eliminarSeguridad(request):
+	ctx = {}
+	if request.method == 'POST':
+		id = request.POST['usuario']
+		d_u = get_depto_user(get_user_by_id(id))[0]
+		ctx['usuario'] = d_u.usuario
+		ctx['depto'] = d_u.depto
+	else:
+		id = request.GET['usuario']
+		Usuario.objects.filter(id=id).delete()
+		return redirect('/sgpc/cuentas/eliminar/')
+	return render(request, 'GestionUser/eliminar_seguro.html', ctx)
+
 @login_required
 def eliminarUsuario(request):
 	users = []
 	ctx = {}
-	if request.method == 'POST':
-		id = request.POST['usuario']
-		Usuario.objects.filter(id=id).delete()
-
 	if request.user.tipoUser == ROOT: #si el usuario es ROOT
 		#Obtener todos los usuarios ADMIN
 		users = get_admin_users() #devuelve todos los ADMIN
@@ -33,6 +42,7 @@ def eliminarUsuario(request):
 	else:
 		return redirect('/sgpc/depto/home/')
 	ctx['lista'] = users
+	ctx['h1'] = 'Eliminar Usuarios'
 	return render(request, 'GestionUser/eliminar_usuario.html', ctx)
 
 @login_required
@@ -40,6 +50,9 @@ def crearUsuario(request):
 	form = UsuarioForm()
 	form = agregarChoices(form, request)
 	ctx = {'form': form}
+	ctx['h1'] = 'Nuevo Usuario'
+	if not can_add_user_admin(): #si no se pueden agregar más usuarios ADMIN
+		ctx['p'] = 'No se pueden agregar más usuarios!'
 	if request.method == 'POST':
 		form = UsuarioForm(request.POST)
 		form = agregarChoices(form, request)
@@ -49,7 +62,8 @@ def crearUsuario(request):
 			ctx = {'titulo': 'Guardado', 'h3': 'Usuario Guardado!'}
 			return render(request, 'GestionUser/estado.html', ctx)
 		else:
-			ctx = {'form': form}
+			ctx['form'] = form
+			
 	return render(request, 'GestionUser/crear_usuario.html', ctx)
 
 @login_required
