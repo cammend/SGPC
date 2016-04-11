@@ -1,5 +1,5 @@
 from django.db import models
-from GestionUsuario.models import Usuario
+from GestionUser.models import Usuario
 from apps.Estado.models import Estado
 
 # Create your models here.

@@ -5,8 +5,8 @@ from apps.Pedido.models import Pedido
 
 # Create your models here.
 class Comentario(models.Model):
-	usuario = ForeingKey(Usuario)
-	cotizacion = ForeingKey(Cotizacion)
+	usuario = models.ForeignKey(Usuario)
+	cotizacion = models.ForeignKey(Cotizacion)
 	titulo = models.CharField(max_length=25)
 	descripcion = models.TextField()
 	fecha = models.DateField()
@@ -15,8 +15,8 @@ class Comentario(models.Model):
 		return self.titulo
 
 class Observacion(models.Model):
-	usuario = ForeingKey(Usuario)
-	pedido = ForeingKey(Pedido)
+	usuario = models.ForeignKey(Usuario)
+	pedido = models.ForeignKey(Pedido)
 	titulo = models.CharField(max_length=25)
 	descripcion = models.TextField()
 	fecha = models.DateField()

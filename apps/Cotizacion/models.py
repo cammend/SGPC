@@ -19,10 +19,10 @@ class Cotizacion(models.Model):
 	def __str__(self):
 		return 'Id pedido: %i - fecha: %s - prioridad: %s' % (self.pedido.id, self.fecha, self.prioridad)
 
-class ProductosCotizados(models.Model)
+class ProductosCotizados(models.Model):
 	producto = models.ForeignKey(Producto)
 	cotizacion = models.ForeignKey(Cotizacion)
-	cantidad = models.Integer()
+	cantidad = models.IntegerField()
 	precio = models.FloatField()
 	garantia = models.IntegerField(blank=True, null=True)
 
