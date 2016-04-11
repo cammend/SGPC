@@ -1,0 +1,26 @@
+{%extends 'base.html'%}
+
+{%block titulo%}Gestión de Usuarios{%endblock%}
+
+{%block body%}
+{% if lista %}
+	<nav>
+	<a href="/sgpc/cuentas/eliminar/">Eliminar Usuarios</a>
+	<a href="/sgpc/cuentas/nueva/">Agregar Usuario</a>
+	</nav>
+	<h1>{{h1}}</h1>
+	{% for l in lista %}
+	<ol>
+	<p>
+		<h2>{{l.usuario.nombres}} {{l.usuario.apellidos}}</h2>
+		<ul>
+			<li><strong>Alias: </strong>{{l.usuario.alias}}</li>
+			<li><strong>Correo: </strong>{{l.usuario.correo}}</li>
+			<li><strong>Departamento: </strong>{{l.depto}}</li>
+			<li><strong>Tipo de Usuario: </strong>{{l.usuario.get_tipo}}</li>
+		</ul>
+	</p>
+	</ol>
+	{% endfor %}
+{% endif%}
+{%endblock%}
