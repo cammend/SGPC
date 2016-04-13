@@ -1,0 +1,11 @@
+{%extends 'base.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+{%block encabezado%}<meta http-equiv="REFRESH" content="6;URL={{url_redir}}" />{%endblock%}
+
+{%block body%}
+<h2>{{titulo_msg}}</h2>
+<h3>{{msg}}</h3>
+<p>Redireccionando...</p>
+<p>Para ir directamente pulse <a href="{{url_redir}}">aquí</a></p>
+{%endblock%}

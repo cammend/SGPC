@@ -12,10 +12,11 @@
 	{% for l in lista %}
 	<ol>
 	<p>
-		<h2>{{l.usuario.nombres}} {{l.usuario.apellidos}}</h2>
+		<h2>{{l.usuario}}</h2>
 		<ul>
-			<li><strong>Alias: </strong>{{l.usuario.alias}}</li>
-			<li><strong>Correo: </strong>{{l.usuario.correo}}</li>
+			<li><strong>Nombres: </strong>{{l.usuario.get_nombres}}</li>
+			<li><strong>Apellidos: </strong>{{l.usuario.get_apellidos}}</li>
+			<li><strong>Correo: </strong>{{l.usuario.get_correo}}</li>
 			<li><strong>Departamento: </strong>{{l.depto}}</li>
 			<li><strong>Tipo de Usuario: </strong>{{l.usuario.get_tipo}}</li>
 		</ul>

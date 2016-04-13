@@ -1,0 +1,28 @@
+{%extends 'base.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block body%}
+<nav>
+{%if is_admin%}<a href="/sgpc/cuentas/">Ver Usuarios de {{depto}}</a>{%endif%}
+</nav>
+<h1>Asociar Estados de pedido a un Depto</h1>
+<form method="post"> {%csrf_token%}
+<h3>
+{{form.as_p}}
+</h3>
+<input type="submit" value="Ver Estados"></input>
+</form>
+<h3>Estados Asociados</h3>
+<ul>
+{%for est in est_asoc %}
+	<li>{{est.id}}. {{est}}</li>
+{%endfor%}
+</ul>
+<h3>Estados no Asociados</h3>
+<ul>
+{%for est in est_des %}
+	<li>{{est.id}}. {{est}}</li>
+{%endfor%}
+</ul>
+{%endblock%}

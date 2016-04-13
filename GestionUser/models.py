@@ -98,3 +98,30 @@ class Usuario(AbstractBaseUser):
 		if self.tipoUser is None:
 			return self.alias
 		return getStringTipo(self.tipoUser)
+
+	def get_nombres(self):
+		if self.nombres is '':
+			return 'Sin nombres'
+		return self.nombres
+
+	def get_apellidos(self):
+		if self.apellidos is '':
+			return 'Sin apellidos'
+		return self.apellidos
+
+	def get_correo(self):
+		if self.correo is '':
+			return '-----'
+		return self.correo
+
+	def es_admin(self):
+		if self.tipoUser == 1: return True
+		return False
+
+	def es_root(self):
+		if self.tipoUser == 0: return True
+		return False
+
+	def es_normal(self):
+		if self.tipoUser == 2: return True
+		return False

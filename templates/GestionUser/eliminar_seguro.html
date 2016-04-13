@@ -9,13 +9,14 @@
 <h1>¿Eliminar?</h1>
 <p>Está seguro de eliminar al siguiente usuario:</p>
 {%if usuario%}
-<h2>{{usuario.nombres}} {{usuario.apellidos}}</h2>
+<h2>{{usuario}}</h2>
 <ul>
-	<li><strong>Alias: </strong>{{usuario.alias}}</li>
-	<li><strong>Correo: </strong>{{usuario.correo}}</li>
+	<li><strong>Nombres: </strong>{{usuario.get_nombres}}</li>
+	<li><strong>Apellidos: </strong>{{usuario.get_apellidos}}</li>
+	<li><strong>Correo: </strong>{{usuario.get_correo}}</li>
 	<li><strong>Departamento: </strong>{{depto}}</li>
-	<form method="get"> 
-	<input style="display:none;" name="usuario" type="text" value="{{usuario.id}}"></input>
+	<form method="post"> {% csrf_token %} 
+	<input name="id" type="hidden" value="{{usuario.id}}"></input>
 	<input type="submit" value="Eliminar"></input></form>
 </ul>
 {%endif%}

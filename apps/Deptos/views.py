@@ -7,13 +7,15 @@ from apps.Estado.funciones import *
 
 
 # Create your views here.
+
+#Vista para mostrar una página correspondiente para un usuario logueado!
 @login_required
 def home(request):
-	tipo = request.user.tipoUser
+	user = request.user
 	ctx = {'titulo':'Gestión'}
-	if tipo == 0: #si es usuario ROOT... no devería ver ésta vista
+	if user.es_root(): #si es usuario ROOT... no devería ver ésta vista
 		return redirect('/sgpc/cuentas/') #y lo redireccionamos
-	elif tipo == 1:
+	elif user.is_admin():
 		ctx['is_admin'] = True
 
 	#Se crea la página para la gestión de los pedidos dependiendo el Depto
@@ -26,6 +28,8 @@ def home(request):
 		ctx['pedidos_gestion'] = get_pedidos_in_my_depto(request.user)
 	return render(request, 'Deptos/depto.html', ctx)
 
+
+#Vista para crear un nuevo Departamento
 class NuevoDepto(CreateView):
 	model = Departamento
 	fields = '__all__'

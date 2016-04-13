@@ -7,14 +7,14 @@
 	<a href="/sgpc/cuentas/">Ver Usuarios</a>
 </nav>
 <h1>{{h1}}</h1>
-<p>Solo se pueden eliminar los usuarios tipo ADMIN!</p>
+<p>Solo se pueden eliminar los usuarios siguientes:</p>
 {%if lista%}
 <ul>
 	{%for l in lista%}
 	<li>
 	<form method="post" action="/sgpc/cuentas/eliminar/advertencia/"> {%csrf_token%}
 	<label>
-<strong>{{l.usuario.nombres}} {{l.usuario.apellidos}} {%if is_root%}- {{l.depto}} {%endif%}-> </strong>
+<strong>Alias: </strong>{{l.usuario}} {%if is_root%}<strong>Depto: </strong> {{l.depto}} {%endif%}-> 
 	</label>
 	<input style="display:none;" name="usuario" type="text" value="{{l.usuario.id}}"></input>
 	<input type="submit" value="Eliminar"></input></form>

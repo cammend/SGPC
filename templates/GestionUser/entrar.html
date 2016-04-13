@@ -6,6 +6,7 @@
 <h1>Iniciar Sesión</h1>
 <form method="post"> {%csrf_token%}
 	{{form.as_p}}
+{%if next%}<input type="hidden" name="next" value="{{next}}"></input>{%endif%}
 	<input type="submit" value="Ingresar"></input>
 </form>
 {%endblock%}

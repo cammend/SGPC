@@ -1,11 +1,15 @@
 from apps.Deptos.models import Departamento, DeptoUser
 from .models import Usuario, getTipos
 
-#Funciones reutilizables
-
 ROOT = 0
 ADMIN = 1
 NORMAL = 2
+
+URL_FOR_ROOT = '/sgpc/cuentas/'
+URL_FOR_ADMIN = '/sgpc/depto/home/'
+
+
+#Funciones reutilizables
 
 #Método para obtener un 'Usuario' a partir del id
 def get_user_by_id(id):
@@ -84,17 +88,30 @@ def getListaDeptos(user):
 		deptos = Departamento.objects.exclude(deptouser=depto_user) #se excluyen todos deptos q ya tengan un user ADMIN asignado
 		#Hasta aquí ya se tienen la lista de deptos q no tienen un user ADMIN asignado
 		for d in deptos:
-			lista.append((d.id,d.nombre)) #se añaden tuplas a la lista
-		return lista
+			lista.append( (d.id,d.nombre) ) #se añaden tuplas a la lista
 	elif user.tipoUser == ADMIN:
-		d_u = DeptoUser.objects.filter(usuario=user)[0]
-		d = d_u.depto
-		depto = [(d.id,d)]
-		return depto
-	return None
+		d_u = DeptoUser.objects.filter(usuario=user)[0] #Buscamos la relación "Usuario-Depto"
+		d = d_u.depto #Escogemos solo el Depto
+		lista = [] #Vaciamos la lista
+		lista.append( (d.id,d) ) #Almacenamos la tupla dentro de la lista
+	return lista
 
 #Método para asignar campos 'choices' a un form
 def agregarChoices(form, request):
 	form.fields['tipo'].choices = getTipoUser(request.user)
 	form.fields['departamento'].choices = getListaDeptos(request.user)
 	return form
+
+#Método encargado de redireccionar a un usuario a la página correspondiente!
+#Si existe un variables 'next' para redirección, se tomará como la de mayor prioridad
+def get_url_redir(request):
+	n = None
+	user = request.user
+
+	if 'next' in request.POST: n = request.POST['next']
+
+	if user.tipoUser == ROOT:
+		if n: return n
+		else: return URL_FOR_ROOT
+	if n: return n
+	else: return URL_FOR_ADMIN
