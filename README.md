@@ -1,8 +1,9 @@
-# SGPC
+﻿# SGPC
 
 Sistema de Gestión de Pedidos de Compra.
 UMG, Ingeniería en Sistemas
 Ingeniería de Software
+11avo semestre
 
 Forma de trabajo:
 1. La rama 'master' deberá contener solo código funcional.
