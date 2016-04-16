@@ -4,8 +4,6 @@ from django.views.generic.edit import CreateView
 from .models import Departamento, DeptoUser
 from apps.Estado.funciones import *
 
-
-
 # Create your views here.
 
 #Vista para mostrar una página correspondiente para un usuario logueado!
@@ -15,7 +13,7 @@ def home(request):
 	ctx = {'titulo':'Gestión'}
 	if user.es_root(): #si es usuario ROOT... no devería ver ésta vista
 		return redirect('/sgpc/cuentas/') #y lo redireccionamos
-	elif user.is_admin():
+	elif user.es_admin():
 		ctx['is_admin'] = True
 
 	#Se crea la página para la gestión de los pedidos dependiendo el Depto

@@ -10,7 +10,7 @@ class Estado(models.Model):
 
 class EstadoDepto(models.Model):
 	depto = models.ForeignKey(Departamento)
-	estado = models.OneToOneField(Estado)
+	estado = models.ForeignKey(Estado)
 
 	def __str__(self):
 		return '%s - %s' % (self.depto, self.estado)

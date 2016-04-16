@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from .models import getDeptos, getTipos
 from apps.Deptos.models import Departamento, DeptoUser
 from .funciones import *
+from apps.Deptos.funciones import *
 
 ROOT = 0
 ADMIN = 1
@@ -14,6 +15,13 @@ NORMAL = 2
 
 URL_FOR_ROOT = '/sgpc/cuentas/'
 URL_FOR_ADMIN = '/sgpc/depto/home/'
+
+#Método para asignar campos 'choices' a un form
+def agregarChoices(form, request):
+	form.fields['tipo'].choices = getTipoUser(request.user)
+	form.fields['departamento'].choices = getListaDeptos(request.user)
+	return form
+
 
 # VISTAS
 

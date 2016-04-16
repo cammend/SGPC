@@ -1,7 +1,9 @@
 from GestionUser.funciones import *
 from .models import Estado, EstadoDepto
-from apps.Deptos.models import Departamento
-from apps.Pedido.models import Pedido, Producto
+from apps.Deptos.funciones import *
+
+def get_estado_by_id(id):
+	return Estado.objects.filter(id=id)[0]
 
 #Método para saber si existe un 'Depto' asociado a un 'Estado' (EstadoDepto)
 def exist_depto_in_state(user):
@@ -62,3 +64,22 @@ def get_estados_out_depto(depto):
 				continue
 			else: aux += 1
 	return estados
+
+#Método para ver si una relación Estado-Depto existe
+def depto_has_estado(depto, estado):
+	d_e = EstadoDepto.objects.filter(estado=estado,depto=depto)
+	if d_e:
+		return True
+	return False
+
+#Método para eliminar una relación Estado-Depto
+def del_depto_estado(depto, estado):
+	EstadoDepto.objects.filter(estado=estado,depto=depto).delete()
+
+#Método para agregar una relación Estado-Depto
+def add_depto_estado(depto, estado):
+	e_d = EstadoDepto()
+	e_d.estado = estado
+	e_d.depto = depto
+	print(e_d.id)
+	e_d.save()

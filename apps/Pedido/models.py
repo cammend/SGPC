@@ -5,7 +5,7 @@ from apps.Estado.models import Estado
 # Create your models here.
 class Pedido(models.Model):
 	usuario = models.ForeignKey(Usuario)
-	estado = models.OneToOneField(Estado)
+	estado = models.ForeignKey(Estado)
 	justificacion = models.TextField()
 	fecha = models.DateField(auto_now_add=True)
 	total = models.FloatField(blank=True, null=True)
