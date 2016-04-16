@@ -1,0 +1,11 @@
+{%extends 'base.html'%}
+
+{%block titulo%}Nuevo Cotizacion{%endblock%}
+
+{%block body%}
+<h1>Nueva Cotizacion</h1>
+<p>Esta pagina ingrasamos Cotizaciones y solo le ingresamos la fecha y la entrega del producto cotizado</p>
+<form method="POST"> {% csrf_token %}
+	{{form.as_p}}
+</form>
+{%endblock%}
