@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^sgpc/cuentas/',include('GestionUser.urls')),
     url(r'^sgpc/depto/',include('apps.Deptos.urls')),
     url(r'^sgpc/root/',include('apps.Root.urls')),
+    url(r'^sgpc/depto/cotizacion/',include('apps.Cotizacion.urls')),
 ]
