@@ -16,13 +16,27 @@
 <h3>Estados Asociados</h3>
 <ul>
 {%for est in est_asoc %}
-	<li>{{est.id}}. {{est}}</li>
+	<li>
+		<form method="post"> {%csrf_token%}
+			{{est.id}}. {{est}}
+			<input type="hidden" name="id" value="{{est.id}}"></input>
+			<input type="hidden" name="departamento" value="{{idDepto}}"></input>
+			<input type="submit" value="Desasociar"></input>
+		</form>
+	</li>
 {%endfor%}
 </ul>
 <h3>Estados no Asociados</h3>
 <ul>
 {%for est in est_des %}
-	<li>{{est.id}}. {{est}}</li>
+	<li>
+		<form method="post"> {%csrf_token%}
+			{{est.id}}. {{est}}
+			<input type="hidden" name="id" value="{{est.id}}"></input>
+			<input type="hidden" name="departamento" value="{{idDepto}}"></input>
+			<input type="submit" value="Asociar"></input>
+		</form>
+	</li>
 {%endfor%}
 </ul>
 {%endblock%}

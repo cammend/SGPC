@@ -1,11 +1,12 @@
 from apps.Deptos.models import Departamento, DeptoUser
 from .models import Usuario, getTipos
+from apps.Deptos.funciones import *
 
 ROOT = 0
 ADMIN = 1
 NORMAL = 2
 
-URL_FOR_ROOT = '/sgpc/cuentas/'
+URL_FOR_ROOT = '/sgpc/root/'
 URL_FOR_ADMIN = '/sgpc/depto/home/'
 
 

@@ -1,0 +1,16 @@
+{%extends 'base.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block body%}
+<h1>Gestión del Sistema</h1>
+<p>Es ésta página puede gestionar el funcionamiento general, el llenado de tablas y las cuentas de usuario</p>
+<ol>
+	<li><a href="/sgpc/cuentas/">Gestionar Usuarios</a></li>
+	<li><a href="#">Agregar un Departamento</a></li>
+	<li><a href="#">Agregar Estados</a></li>
+	<li><a href="/sgpc/root/asociar/">Asociar Estados a Departamentos</a></li>
+	<li><a href="#">Agregar las prioridades</a></li>
+	<li><a href="#">Agregar Transiciones</a></li>
+</ol>
+{%endblock%}

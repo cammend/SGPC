@@ -13,7 +13,7 @@ ROOT = 0
 ADMIN = 1
 NORMAL = 2
 
-URL_FOR_ROOT = '/sgpc/cuentas/'
+URL_FOR_ROOT = '/sgpc/root/'
 URL_FOR_ADMIN = '/sgpc/depto/home/'
 
 #Método para asignar campos 'choices' a un form
