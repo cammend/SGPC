@@ -6,7 +6,7 @@ from .models import Cotizacion,ProductosCotizados
 class formCotizacion(forms.ModelForm):
 	class Meta:
 		model = Cotizacion
-		fields = ['fecha', 'entrega']
+		fields = ['fecha_cotizacion', 'fecha_entrega']
 
 
 class formProducCotizados(forms.ModelForm):

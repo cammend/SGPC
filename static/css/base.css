@@ -1,0 +1,95 @@
+body{
+
+}
+
+
+/*BARRA SUPERIOR DE LA PAGINA*/
+#barra_superior{
+	background-color: #01aaad;
+}
+#logo img{
+	display: block;
+	padding-left: 10px;
+	width: 100px;
+}
+#titulo{
+	border: 1px solid #01999d;
+	border-radius: 2px;
+	display: inline-block;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin-right: 10px;
+}
+#titulo strong a{
+	color: white;
+	text-decoration: none;
+}
+#fila_superior{
+	text-align: right;
+	color: white;
+}
+#logueado{
+	margin-right: 10px;
+}
+#logueado a{
+	background-color: white;
+	color: #01aaad;
+	text-decoration: none;
+	padding: 2px;
+	border-radius: 2px;
+}
+/*FIN BARRA SUPERIOR DE LA PAGINA*/
+
+/*ESTILO FORMULARIO*/
+.form_estilo_1{
+	text-align: center;
+	border: 1px solid #00999d;;
+	border-radius: 1px;
+	margin: 0 auto;
+	margin-top: 20px;
+
+}
+.form_estilo_1 h2{
+	background-color: #01999d;
+	color: white;
+	padding: 10px 0;
+	margin-bottom: 15px;
+}
+.form_estilo_1 p{
+	color: #007789;
+	display: block;
+	margin: 0 auto;
+	padding: 0 15px;
+}
+.form_estilo_1 p *{
+	box-sizing: border-box;
+	display: block;
+	margin: 0 auto;
+	width: 100%;
+}
+.form_estilo_1 p input{
+	margin-bottom: 15px;
+}
+/*FIN DE UN ESTILO FORMULARIO*/
+
+/*ESTILO BOTONES*/
+.boton_estilo_1{
+	background-color: #01999d;
+	border: 1px solid #017788;
+	border-radius: 5px;
+	color: white;
+	display: block;
+	font-size: 16px;
+	margin: 0 auto;
+	margin-bottom: 15px;
+	width: 80px;
+}
+/*FIN ESTILO BOTONES*/
+
+/**/
+footer{
+	background-color: #335566;
+	color: white;
+	margin-top: 30px;
+}
+/**/

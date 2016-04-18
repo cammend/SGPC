@@ -9,7 +9,7 @@ class Estado(models.Model):
 		return self.nombre
 
 class EstadoDepto(models.Model):
-	depto = models.ForeignKey(Departamento)
+	depto = models.ForeignKey(Departamento, verbose_name='Departamento')
 	estado = models.ForeignKey(Estado)
 
 	def __str__(self):

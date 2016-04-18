@@ -4,15 +4,44 @@
 	<title>{%block titulo%}{%endblock%}</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<link rel="icon" type="image/png" href="/static/img/favicon.ico" />
+	<link rel="stylesheet" type="text/css" href="/static/css/grid.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/base.css">
 	{%block encabezado%}{%endblock%}
 </head>
 <body>
+<div id="barra_superior" class="fila cuatro-celdas">
+	<div id="logo" class="celda ancho1">
+		<img src="/static/img/pedido.jpg" clas="ancho1">
+	</div>
+	<div id="fila_superior" class="celda ancho3">
+		<p id="titulo" style="font-size: 24px; margin-bottom: 35px;">
+		<strong><a href="{{url_home}}">Sistema de Gestión de Pedidos de Compra</a></strong>
+		</p>
 {% if request.user.is_authenticated %}
-<p><strong>Usuario: </strong>{{ request.user }}
-<strong>Tipo: </strong>{{ request.user.get_tipo }}
-<a href="/sgpc/cuentas/salir/">Cerrar Sesión</a>
+		<p id="logueado">
+		<strong>Usuario: </strong>{{ request.user }}
+		<strong>Tipo: </strong>{{ request.user.get_tipo }}
+		<a href="/sgpc/cuentas/salir/">Cerrar Sesión</a>
+		</p>
 {% endif %}
-</p>
+	</div>
+</div>
 {%block body%}{%endblock%}
+<div style="margin-top: 30px;">
+	<footer class="fila tres-celdas">
+	<div class="celda ancho1">
+		<p>SGPC</p>
+		<p>Ingeniería del Software</p>
+	</div>
+	<div class="celda ancho2">
+		<ul>
+			<li>Carlos Caal Mendoza</li>
+			<li>Brandon Guzmán De León</li>
+			<li>Karin Hernández Pacheco</li>
+		</ul>
+	</div>
+</footer>
+</div>
 </body>
 </html>

@@ -161,6 +161,7 @@ def entrar(request):
 
 	form = AuthenticationForm() #un formulario sin datos del POST
 	ctx['form'] = form #guardamos un form limpio
+	ctx['url_home'] = '/sgpc/cuentas/entrar/'
 	return render(request, 'GestionUser/entrar.html', ctx)
 
 #Vista para cerrar la sesión

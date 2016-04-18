@@ -9,15 +9,16 @@ class Prioridad(models.Model):
 		return self.nombre
 
 class Cotizacion(models.Model):
-	prioridad = models.ForeignKey(Prioridad)
+	prioridad = models.ForeignKey(Prioridad, null=True)
 	pedido = models.ForeignKey(Pedido)
-	cancelada = models.BooleanField()
-	aprobada = models.BooleanField()
-	entrega = models.IntegerField()
-	fecha = models.DateField()
+	cancelada = models.BooleanField(default=True)
+	aprobada = models.BooleanField(default=False)
+	proveedor = models.CharField(max_length='50')
+	fecha_cotizacion = models.DateField(verbose_name='Fecha de ésta Cotización')
+	fecha_entrega = models.DateField(verbose_name='Fecha de Entrega del Pedido')
 
 	def __str__(self):
-		return 'Id pedido: %i - fecha: %s - prioridad: %s' % (self.pedido.id, str(self.fecha), self.prioridad)
+		return 'Id pedido: %i - fecha: %s - prioridad: %s' % (self.pedido.id, str(self.fecha_cotizacion), self.prioridad)
 
 class ProductosCotizados(models.Model):
 	producto = models.ForeignKey(Producto)
