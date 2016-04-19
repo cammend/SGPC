@@ -75,8 +75,8 @@ def get_depto_by_id(id):
 
 #Método para obtener el 'Departamento' al q pertenece un usuario
 def get_depto_of_user(user):
-	if user.es_root():
-		return None
+	#if user.es_root():
+		#return None
 	d_u = DeptoUser.objects.get(usuario=user)
 	return d_u.depto
 	#Retorna un objeto 'Departamento'
