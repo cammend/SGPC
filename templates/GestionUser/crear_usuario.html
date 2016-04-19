@@ -1,15 +1,15 @@
-{%extends 'base.html'%}
+{%extends 'Root/base_root.html'%}
 
 {%block titulo%}Nuevo Usuario{%endblock%}
 
-{%block body%}
+{%block principal%}
 <nav>
 	<a href="/sgpc/cuentas/">Ver Usuarios</a>
 </nav>
-<h1>{{h1}}</h1>
 {%if p%}<p>{{p}}</p>{%endif%}
 {%if form%}
 <form method='post'>{% csrf_token %}
+	<h2>{{h1}}</h2>
 	{{form.as_p}}
 	<input type='submit' value='Registrar'></input>
 </form>

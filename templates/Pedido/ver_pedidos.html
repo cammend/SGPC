@@ -1,0 +1,12 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}SGPC - ver pedidos{%endblock%}
+
+{%block principal%}
+	<h2>Lista de pedidos</h2>
+	<ul>
+	{%for l in lista%}
+		<li><a href="">{{l}}</a></li>
+	{%endfor%}
+	</ul>
+{%endblock%}

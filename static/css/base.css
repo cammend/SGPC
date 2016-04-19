@@ -67,7 +67,7 @@ body{
 	margin: 0 auto;
 	width: 100%;
 }
-.form_estilo_1 p input{
+.form_estilo_1 p input,select{
 	margin-bottom: 15px;
 }
 /*FIN DE UN ESTILO FORMULARIO*/

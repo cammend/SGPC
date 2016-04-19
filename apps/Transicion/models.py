@@ -6,8 +6,8 @@ from GestionUser.models import Usuario
 #Create your models here.
 class Transicion(models.Model):
 	descripcion = models.CharField(max_length=50)
-	estadoActual = models.ForeignKey(Estado, related_name='actual')
-	estadoSiguiente = models.ForeignKey(Estado, related_name='siguiente')
+	estadoActual = models.ForeignKey(Estado, related_name='actual', verbose_name='Estado actual')
+	estadoSiguiente = models.ForeignKey(Estado, related_name='siguiente', verbose_name='Estado siguiente')
 
 	def __str__(self):
 		return '%s - (%s --> %s)' % (self.descripcion, self.estadoActual, self.estadoSiguiente)
@@ -17,7 +17,7 @@ class Transicion(models.Model):
 
 class HistorialTransicion(models.Model):
 	pedido = models.ForeignKey(Pedido)
-	transicion = models.ForeignKey(Transicion)
+	transicion = models.ForeignKey(Transicion,verbose_name='Transición')
 	usuario = models.ForeignKey(Usuario)
 	fecha = models.DateField()
 

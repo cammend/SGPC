@@ -1,0 +1,12 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block principal%}
+	<form method="post">{%csrf_token%}
+	<h2>Agregar Producto</h2><a href="/sgpc/depto/pedido/finalizar/">Finalizar Pedido</a>
+	<p><strong>Al pedido: </strong>{{pedido}}</p>
+	{{form.as_p}}
+	<input type="submit" value="Agregar"></input>
+	</form>
+{%endblock%}

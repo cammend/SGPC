@@ -1,25 +1,22 @@
-{%extends 'base.html'%}
+{%extends 'Deptos/base_depto.html'%}
 
 {%block titulo%}{{titulo}}{%endblock%}
 
-{%block body%}
-<nav>
-{%if is_admin%}<a href="/sgpc/cuentas/">Ver Usuarios de {{depto}}</a>{%endif%}
-</nav>
-<h1>{{depto}}</h1>
+{%block principal%}
+	<h2>Gestión de Pedidos</h2>
 
-{%if gestionar%}
-<p>
-	<h2>Pedidos para gestionar</h2>
-	<ul>
-	{%for p in pedidos_gestion%}
-		<li>{{p}}</li>
-	{%endfor%}
-	</ul>
-</p>
+	{%if gestionar%}
+	<p>
+		<h3>Pedidos para gestionar</h3>
+		<ul>
+		{%for p in pedidos_gestion%}
+			<li>{{p}}</li>
+		{%endfor%}
+		</ul>
+	</p>
 
-<p>
-	<h2>Pedidos gestionados</h2>
-</p>
-{%endif%}
+	<p>
+		<h3>Pedidos gestionados</h3>
+	</p>
+	{%endif%}
 {%endblock%}

@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (
 	BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
-
+from apps.Deptos.models import Departamento
 # Permisos:
 # 0 = ROOT
 # 1 = Admin
@@ -25,6 +25,7 @@ tipos = [(0,'ROOT'),
 		 (1,'ADMIN'),
 		 (2,'NORMAL'),
 ]
+
 
 def getStringTipo(num):
 	return str(tipos[num][1])
@@ -76,6 +77,8 @@ class Usuario(AbstractBaseUser):
 	USERNAME_FIELD = 'alias'
 	REQUIRED_FIELDS = []
 
+	depto = None
+
 	def get_full_name(self):
 		return '%s %s' % (self.nombres, self.apellidos)
 
@@ -125,3 +128,20 @@ class Usuario(AbstractBaseUser):
 	def es_normal(self):
 		if self.tipoUser == 2: return True
 		return False
+
+	def get_depto(self):
+		if self.tipoUser == 0:
+			return None
+		return DeptoUser.objects.get(usuario=self).depto
+
+	def get_url_home(self):
+		if self.tipoUser == 0:
+			return '/sgpc/root/'
+		return '/sgpc/depto/home/'
+
+class DeptoUser(models.Model):
+	usuario = models.OneToOneField(Usuario)
+	depto = models.ForeignKey(Departamento)
+
+	def __str__(self):
+		return '%s - %s' % (self.usuario, self.depto)

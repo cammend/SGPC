@@ -1,10 +1,14 @@
 from django.conf.urls import include, url, patterns
 from .views import home, NuevoDepto
-from apps.Pedido.views import verPedidos, DetallePedido
+from apps.Pedido.views import verPedidos, DetallePedido, nuevoPedido, nuevoProducto, finalizarPedido
 
 urlpatterns = patterns('',
     url(r'^home/$', home),
     url(r'^nuevo/$', NuevoDepto.as_view()),
-    url(r'^pedidos/$', verPedidos),
+    url(r'^pedido/ver/$', verPedidos),
     url(r'^detalle/(?P<id>[-\w]+)/$', DetallePedido.as_view()),
+    url(r'^pedido/nuevo/$', nuevoPedido),
+    url(r'^producto/nuevo/$', nuevoProducto),
+    url(r'^pedido/finalizar/$', finalizarPedido),
+
 )

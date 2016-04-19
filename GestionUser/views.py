@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
 from .forms import UsuarioForm
-from .models import Usuario
+from .models import Usuario, DeptoUser
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import getDeptos, getTipos
-from apps.Deptos.models import Departamento, DeptoUser
+from apps.Deptos.models import Departamento
 from .funciones import *
 from apps.Deptos.funciones import *
 
@@ -48,7 +48,7 @@ def eliminarSeguridad(request):
 		if user.es_root(): #Comprobamos q el user de la sesión sea ROOT
 			if u.es_admin(): #Comprobamos q el usuario a eliminar sea ADMIN
 				print('Eliminado user admin')
-				#list_u.delete() #Si es ADMIN, lo eliminamos
+				list_u.delete() #Si es ADMIN, lo eliminamos
 			else:
 				return render(request, 'GestionUser/info.html', ctx)
 		elif user.es_admin(): #Si el user de la sesión es admin
@@ -58,7 +58,7 @@ def eliminarSeguridad(request):
 			#Luego verificamos que el usuario a eliminar sea NORMAL
 			if (id_1 == id_2) and u.es_normal():
 				print('Eliminado user normal')
-				#list_u.delete()
+				list_u.delete()
 			else:
 				return render(request, 'GestionUser/info.html', ctx)
 
@@ -87,6 +87,7 @@ def eliminarUsuario(request):
 		return redirect('/sgpc/depto/home/')
 	ctx['lista'] = users
 	ctx['h1'] = 'Eliminar Usuarios'
+	if not users: ctx['p'] = 'No hay usuarios para eliminar.'
 	return render(request, 'GestionUser/eliminar_usuario.html', ctx)
 
 @login_required

@@ -1,15 +1,15 @@
-{%extends 'base.html'%}
+{%extends 'Root/base_root.html'%}
 
 {%block titulo%}Nuevo Usuario{%endblock%}
 
-{%block body%}
+{%block principal%}
 <nav>
 	<a href="/sgpc/cuentas/">Ver Usuarios</a>
 </nav>
-<h1>¿Eliminar?</h1>
+<h2>¿Eliminar?</h2>
 <p>Está seguro de eliminar al siguiente usuario:</p>
 {%if usuario%}
-<h2>{{usuario}}</h2>
+<h3>{{usuario}}</h3>
 <ul>
 	<li><strong>Nombres: </strong>{{usuario.get_nombres}}</li>
 	<li><strong>Apellidos: </strong>{{usuario.get_apellidos}}</li>

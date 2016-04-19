@@ -1,0 +1,14 @@
+{%extends 'base_2.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block nav%}
+<h2>{{request.user.get_depto}}</h2>
+<ul>
+{%if request.user.es_admin%}
+	<li><a href="/sgpc/cuentas/">Ver Usuarios</a></li>
+{%endif%}
+	<li><a href="/sgpc/depto/pedido/nuevo/">Nuevo Pedido</a></li>
+	<li><a href="/sgpc/depto/pedido/ver/">Ver Pedidos</a></li>
+</ul>
+{%endblock%}

@@ -1,16 +1,19 @@
-{%extends 'base.html'%}
+{%extends 'Root/base_root.html'%}
 
 {%block titulo%}{{titulo}}{%endblock%}
 
-{%block body%}
-<h1>Gestión del Sistema</h1>
-<p>Es ésta página puede gestionar el funcionamiento general, el llenado de tablas y las cuentas de usuario</p>
-<ol>
-	<li><a href="/sgpc/cuentas/">Gestionar Usuarios</a></li>
-	<li><a href="#">Agregar un Departamento</a></li>
-	<li><a href="#">Agregar Estados</a></li>
-	<li><a href="/sgpc/root/asociar/">Asociar Estados a Departamentos</a></li>
-	<li><a href="#">Agregar las prioridades</a></li>
-	<li><a href="#">Agregar Transiciones</a></li>
-</ol>
+{%block principal%}
+	<h1>Gestión del Sistema</h1>
+	<p><strong>Para poder usar el sistema es necesario realizar algunas tareas previas.</strong></p>
+	<ol style="margin-left: 20px;">
+		<li>Se necistan registrar todos los departamentos de la empresa.
+		Con ésto ya se puede iniciar la creación de usuarios ya que un usuario necesita obligatoriamente
+		ser asignado a un Departamento.
+		</li>
+		<li>Luego de registrar los Departamentos, éste usuario 'root' sólo puede crear 1 usuario 'admin' por cada Departamento. Luego el usuario 'admin' sólo podrá crear usuarios 'normales' para el departamento al que pertenezca.</li>
+		<li>Es necesario registrar todos los estados posibles en los que puede estar un 'pedido'. Es oportuno registrar éstos estados en orden, desde el estado inicial hasta el estado final.</li>
+		<li>Todos los departamentos son 'Unidades Interesadas'. Por lo tanto habrá un conjunto de estados que serán iguales para todos los departamentos. Sin embargo, habrá estados especiales asociados sólo a los departamentos que "gestionan pedidos", los cuales tendrán que "gestionar" el pedido de manera específica en algún momento.</li>
+		<li>Registrar transiciones hace referencia a los posibles 'caminos' que puede tomar un pedido en gestión. Un 'estado' no necesariamente tiene 1 solo 'estado siguiente', sino que, puede tener varios 'estados siguientes'. Con ésto queda claro que el camino de un pedido desde que inicia hasta que termina no será igual para todos los pedidos.</li>
+		<li>Las prioridades hacen referencia a las cotizaciones. A la hora de gestionar y agregar una prioridad a una cotización sólo estarán disponibles las prioridades aquí registradas. Un ejemplo de prioridades sería (Alta, Normal y Baja).</li>
+	</ol>
 {%endblock%}

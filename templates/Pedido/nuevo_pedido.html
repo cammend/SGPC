@@ -1,0 +1,11 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block principal%}
+	<form method="post">{%csrf_token%}
+	<h2>Nuevo Pedido</h2>
+	{{form.as_p}}
+	<input type="submit" value="Crear"></input>
+	</form>
+{%endblock%}

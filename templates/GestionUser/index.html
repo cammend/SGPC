@@ -1,13 +1,13 @@
-{%extends 'base.html'%}
+{%extends 'Root/base_root.html'%}
 
 {%block titulo%}Gestión de Usuarios{%endblock%}
 
-{%block body%}
+{%block principal%}
 <nav>
 <a href="/sgpc/cuentas/eliminar/">Eliminar Usuarios</a>
 <a href="/sgpc/cuentas/nueva/">Agregar Usuario</a>
 </nav>
-<h1>{{h1}}</h1>
+<h2>{{h1}}</h2>
 {% if lista %}
 	{% for l in lista %}
 	<ol>

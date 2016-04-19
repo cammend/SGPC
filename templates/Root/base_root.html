@@ -1,0 +1,24 @@
+{%extends 'base_2.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block nav%}
+{%if request.user.get_depto%}
+<h2>{{request.user.get_depto}}</h2>
+{%else%}
+<h2>Gestión</h2>
+{%endif%}
+<ol style="margin-left: 30px;">
+{%if request.user.es_admin%}
+	<li><a href="/sgpc/cuentas/">Gestionar Usuarios</a></li>
+{%endif%}
+{%if request.user.es_root%}
+	<li><a href="#">Agregar un Departamento</a></li>
+	<li><a href="/sgpc/cuentas/">Gestionar Usuarios</a></li>
+	<li><a href="#">Agregar Estados</a></li>
+	<li><a href="/sgpc/root/asociar/">Asociar Estados a Departamentos</a></li>
+	<li><a href="#">Agregar Transiciones</a></li>
+	<li><a href="#">Agregar las prioridades</a></li>
+{%endif%}
+</ol>
+{%endblock%}

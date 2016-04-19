@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Usuario
-from apps.Deptos.models import Departamento, DeptoUser
+from .models import Usuario, DeptoUser
+from apps.Deptos.models import Departamento
 
 class UsuarioForm(forms.ModelForm):
 	departamento = forms.ChoiceField()

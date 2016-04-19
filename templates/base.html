@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{%block titulo%}{%endblock%}</title>
+	<title>SGPC - {%block titulo%}{%endblock%}</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<link rel="icon" type="image/png" href="/static/img/favicon.ico" />
@@ -16,7 +16,7 @@
 	</div>
 	<div id="fila_superior" class="celda ancho3">
 		<p id="titulo" style="font-size: 24px; margin-bottom: 35px;">
-		<strong><a href="{{url_home}}">Sistema de Gestión de Pedidos de Compra</a></strong>
+		<strong><a href="{{request.user.get_url_home}}">Sistema de Gestión de Pedidos de Compra</a></strong>
 		</p>
 {% if request.user.is_authenticated %}
 		<p id="logueado">
