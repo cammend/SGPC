@@ -6,7 +6,7 @@
 	<h2>Lista de pedidos</h2>
 	<ul>
 	{%for l in lista%}
-		<li><a href="">{{l}}</a></li>
+		<li><a href="/sgpc/depto/pedido/detalle/{{l.id}}">{{l}}</a></li>
 	{%endfor%}
 	</ul>
 {%endblock%}

@@ -1,0 +1,18 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block principal%}
+	{{pedido}}
+	<p>
+	{%if back%}
+	<a href="/sgpc/depto/pedido/detalle/{{back}}"><</a>
+	{%else%}
+	<a href="#"><</a>
+	{%endif%}
+	{%if next%}
+	<a href="/sgpc/depto/pedido/detalle/{{next}}">></a>
+	{%else%}
+	<a href="#">></a>
+	{%endif%}
+{%endblock%}

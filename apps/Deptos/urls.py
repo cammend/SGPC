@@ -1,6 +1,6 @@
 from django.conf.urls import include, url, patterns
 from .views import home, NuevoDepto
-from apps.Pedido.views import verPedidos, DetallePedido, nuevoPedido, nuevoProducto, finalizarPedido
+from apps.Pedido.views import verPedidos, DetallePedido, nuevoPedido, nuevoProducto, finalizarPedido, detallePedido
 
 urlpatterns = patterns('',
     url(r'^home/$', home),
@@ -10,5 +10,6 @@ urlpatterns = patterns('',
     url(r'^pedido/nuevo/$', nuevoPedido),
     url(r'^producto/nuevo/$', nuevoProducto),
     url(r'^pedido/finalizar/$', finalizarPedido),
+    url(r'^pedido/detalle/(?P<id>[-\w]+)/$', detallePedido),
 
 )
