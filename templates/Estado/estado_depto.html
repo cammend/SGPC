@@ -1,14 +1,14 @@
-{%extends 'base.html'%}
+{%extends 'Root/base_root.html'%}
 
-{%block titulo%}{{titulo}}{%endblock%}
+{%block titulo%}Asociar{%endblock%}
 
-{%block body%}
+{%block principal%}
 <nav>
 {%if is_admin%}<a href="/sgpc/cuentas/">Ver Usuarios de {{depto}}</a>{%endif%}
 </nav>
-<h1>Asociar Estados de pedido a un Depto</h1>
+<h2>Asociar Estados de pedido a un Depto</h2>
 <form method="post"> {%csrf_token%}
-<h3>
+<h3 style="display: inline-block;">
 {{form.as_p}}
 </h3>
 <input type="submit" value="Ver Estados"></input>

@@ -13,6 +13,9 @@ class Pedido(models.Model):
 	def __str__(self):
 		return 'Usuario: %s - Fecha: %s - Estado: %s' % (self.usuario, str(self.fecha), self.estado)
 
+	def get_depto(self):
+		return self.usuario.get_depto()
+
 class Producto(models.Model):
 	pedido = models.ForeignKey(Pedido)
 	descripcion = models.TextField(verbose_name='Descripción')

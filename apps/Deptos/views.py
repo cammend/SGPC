@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic.edit import CreateView
+from django.views.generic.list import ListView
 from .models import Departamento
 from apps.Estado.funciones import *
 from .funciones import *
@@ -25,9 +27,22 @@ def home(request):
 		ctx['pedidos_gestion'] = get_pedidos_in_my_depto(request.user)
 	return render(request, 'Deptos/depto.html', ctx)
 
+class VerDeptos(ListView):
+	model = Departamento
+	fields = ['nombre']
+	template_name = 'Deptos/lista_deptos.html'
+
 
 #Vista para crear un nuevo Departamento
 class NuevoDepto(CreateView):
 	model = Departamento
-	fields = '__all__'
+	fields = ['nombre']
 	template_name = 'Deptos/nuevo_depto.html'
+	success_url = '/sgpc/depto/lista/'
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		user = self.request.user
+		if user.es_root():
+			return super(NuevoDepto, self).dispatch(*args, **kwargs)
+		return redirect(user.get_url_home())

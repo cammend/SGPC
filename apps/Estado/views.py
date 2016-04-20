@@ -22,14 +22,15 @@ def addEstadoDepto(request):
 				else: add_depto_estado(depto, estado)
 			if 'departamento' in request.POST:
 				idDepto = request.POST['departamento']
-				depto = Departamento.objects.filter(id=idDepto)
-				est_asoc = get_estados_in_depto(depto)
-				est_des = get_estados_out_depto(depto)
-				form = ListaDeptos(data=request.POST)
-				ctx['est_asoc'] = est_asoc
-				ctx['est_des'] = est_des
-				ctx['idDepto'] = idDepto
-				ctx['form'] = form
+				if idDepto:
+					depto = Departamento.objects.filter(id=idDepto)
+					est_asoc = get_estados_in_depto(depto)
+					est_des = get_estados_out_depto(depto)
+					form = ListaDeptos(data=request.POST)
+					ctx['est_asoc'] = est_asoc
+					ctx['est_des'] = est_des
+					ctx['idDepto'] = idDepto
+					ctx['form'] = form
 		else:
 			pass
 

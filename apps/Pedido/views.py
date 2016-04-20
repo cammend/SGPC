@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from .funciones import *
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.decorators import login_required
 from .models import Pedido, Producto
 from .forms import FormPedido, FormProducto
 from apps.Deptos.funciones import *
 from GestionUser.funciones import *
+from apps.Estado.models import EstadoDepto, Estado
+from apps.Cotizacion.models import Cotizacion, ProductosCotizados
 
 # Create your views here.
 @login_required
@@ -87,7 +89,60 @@ def detallePedido(request, id):
 	depto_p = get_depto_of_pedido(pedido)
 	if depto_u == depto_p:
 		list_model = request.session['lista_id_pedido']
+		productos = Producto.objects.filter(pedido=pedido)
 		ctx['pedido'] = pedido
+		ctx['productos'] = productos
 		ctx['next'] = get_next_of_list_model(id, list_model)
 		ctx['back'] = get_back_of_list_model(id, list_model)
 	return render(request, 'Pedido/detalle_pedido.html', ctx)
+
+class EditarProducto(UpdateView):
+	model = Producto
+	fields = ['descripcion', 'cantidad', 'precio']
+	template_name = 'Pedido/editar_pedido.html'
+	slug_url_kwarg = 'id'
+	slug_field = 'id'
+	success_url = '/sgpc/depto/pedido/ver/'
+
+def gestionarPedido(request, id):
+	user = request.user
+	ctx = {}
+	pedido = Pedido.objects.get(id=id)
+	estado_pedido = pedido.estado
+	estado_depto  = EstadoDepto.objects.get(depto=user.get_depto()).estado
+	if estado_pedido == estado_depto: #si el pedido corresponde al depto
+		estados = Estado.objects.all()
+		if estado_depto == estados[0]: #NO PUBLICADO
+			pass
+		elif estado_depto == estados[1]: #PUBLICADO
+			pass
+		elif estado_depto == estados[2]: #CON PRESUPUESTO ASIGNADO
+			pass
+		elif estado_depto == estados[3]: #APROBADO POR GERENTE
+			pass
+		elif estado_depto == estados[4]: #COTIZADO
+			pass
+		elif estado_depto == estados[5]: #CON COTIZACIONES ORDENADAS
+			pass
+		elif estado_depto == estados[6]: #CON COTIZACION ELEGIDA
+			if request.method == 'POST':
+				if 'id_estado' in request.POST:
+					id_estado = request.POST['id_estado']
+					gestionar_presupuesto(id, id_estado)
+					ctx['titulo'] = 'Gestionado'
+					ctx['titulo_msg'] = 'Estado Cambiado'
+					ctx['url_redir'] = user.get_url_home()
+					return render(request, 'GestionUser/info.html', ctx)
+			else:
+				ctx = gestion_presupuesto(id)
+			return render(request, 'Gestion/cotizacion_elegida.html', ctx)
+		elif estado_depto == estados[7]: #COMPRADO
+			pass
+		elif estado_depto == estados[8]: #EN ALMACEN
+			pass
+		elif estado_depto == estados[9]: #RETIRADO DE ALMACEN
+			pass
+		elif estado_depto == estados[10]: #CANCELADO
+			pass
+
+	return redirect(user.get_url_home())

@@ -1,0 +1,27 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}Comprar{%endblock%}
+
+{%block principal%}
+	<h2>Comprar Pedido</h2>
+	<p><strong>Pedido: </strong> (DEPTO: {{pedido.get_depto}} - FECHA: {{pedido.fecha}})</p>
+	<p><strong>Cotización: </strong> (FECHA: {{cotizacion.fecha_cotizacion}} - PRIORIDAD: {{cotizacion.prioridad}})</p>
+	<p><strong>Producto(s):</strong></p>
+	<table>
+		<tr><td>Descripcion</td><td>Cantidad</td><td>Precio</td><td>Total</td></tr>
+		{%for p in productos%}
+		<tr>
+		<td>{{p.producto.descripcion}}</td>
+		<td>{{p.cantidad}}</td>
+		<td>{{p.precio}}</td>
+		<td>{{p.total}}</td>
+		</tr>
+		{%endfor%}
+		<tr><td colspan="3">TOTAL:</td><td>{{total}}</td></tr>
+	</table>
+	<form method="post">{%csrf_token%}
+		<input type="hidden" name="id_pedido" value="{{pedido.id}}" />
+		<input type="hidden" name="id_estado" value="{{id_est_comprado}}" />
+		<input type="submit" value="Guardar como Comprado" />
+	</form>
+{%endblock%}

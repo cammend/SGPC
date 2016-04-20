@@ -1,11 +1,8 @@
-{%extends 'Root/base_root.html'%}
+{%extends 'GestionUser/index.html'%}
 
 {%block titulo%}Nuevo Usuario{%endblock%}
 
 {%block principal%}
-<nav>
-	<a href="/sgpc/cuentas/">Ver Usuarios</a>
-</nav>
 {%if p%}<p>{{p}}</p>{%endif%}
 {%if form%}
 <form method='post'>{% csrf_token %}

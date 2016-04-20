@@ -13,7 +13,7 @@ class Cotizacion(models.Model):
 	pedido = models.ForeignKey(Pedido)
 	cancelada = models.BooleanField(default=False)
 	aprobada = models.BooleanField(default=False)
-	proveedor = models.CharField(max_length='50')
+	proveedor = models.CharField(max_length=50)
 	fecha_cotizacion = models.DateField(verbose_name='Fecha de ésta Cotización')
 	fecha_entrega = models.DateField(verbose_name='Fecha de Entrega del Pedido')
 

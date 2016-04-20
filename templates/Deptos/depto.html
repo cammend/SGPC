@@ -1,22 +1,22 @@
 {%extends 'Deptos/base_depto.html'%}
 
-{%block titulo%}{{titulo}}{%endblock%}
+{%block titulo%}Gestión de pedidos{%endblock%}
 
 {%block principal%}
-	<h2>Gestión de Pedidos</h2>
+<h2>Gestión de Pedidos</h2>
 
-	{%if gestionar%}
-	<p>
-		<h3>Pedidos para gestionar</h3>
+<section>
+	<h3>Pedidos para gestionar</h3>
+	{%if pedidos_gestion%}
 		<ul>
 		{%for p in pedidos_gestion%}
-			<li>{{p}}</li>
-		{%endfor%}
+			<li>
+<a href="/sgpc/depto/pedido/gestionar/{{p.id}}"><strong>Depto: </strong>{{p.get_depto}} - <strong>Fecha: </strong>{{p.fecha}}</a>
+			</li>
 		</ul>
-	</p>
-
-	<p>
-		<h3>Pedidos gestionados</h3>
-	</p>
+		{%endfor%}
+	{%else%}
+	<p>No hay pedidos por ahora.</p>
 	{%endif%}
+</section>
 {%endblock%}

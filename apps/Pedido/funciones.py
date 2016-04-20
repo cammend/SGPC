@@ -1,4 +1,7 @@
 from .models import Pedido, Producto
+from apps.Estado.models import Estado
+from apps.Cotizacion.models import Cotizacion, ProductosCotizados
+from django.db.models import Sum, F, Avg, FloatField, ExpressionWrapper
 from apps.Deptos.funciones import *
 from GestionUser.funciones import *
 
@@ -72,3 +75,28 @@ def get_back_of_list_model(id, list_model):
 		if primero:	primero = False
 		else: aux = l
 	return None
+
+
+#Se retorna un diccionario con todos los datos del pedido:
+#PEDIDO (estado: con contizacion elegida)
+#--COTIZACION (elegida)
+#----PRODUCTOS (cotizados)
+def gestion_presupuesto(id_pedido):
+	ctx = {}
+	pedido = Pedido.objects.get(id=id_pedido)
+	cotizacion = Cotizacion.objects.get(pedido=pedido, aprobada=True)
+	productos  = ProductosCotizados.objects.filter(cotizacion=cotizacion)
+	products = productos.annotate( total=ExpressionWrapper( F('cantidad')*F('precio'), output_field=FloatField() ) )
+	total = products.aggregate(Sum(F('total')))
+	print(products)
+	ctx['pedido'] = pedido
+	ctx['cotizacion'] = cotizacion
+	ctx['productos'] = products
+	ctx['total'] = total['total__sum'] 
+	ctx['id_est_comprado'] = 8 #Estado 'Comprado'
+	return ctx
+
+#Cuando se compra una cotización elegida se debe cambiar de estado al pedido (comprado)
+def gestionar_presupuesto(id_pedido, id_estado):
+	estado = Estado.objects.get(id=id_estado)
+	Pedido.objects.filter(id=id_pedido).update(estado=estado)

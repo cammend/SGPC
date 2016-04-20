@@ -3,16 +3,38 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block principal%}
-	{{pedido}}
 	<p>
+	<h2>Detalle del pedido</h2>
 	{%if back%}
-	<a href="/sgpc/depto/pedido/detalle/{{back}}"><</a>
+	<a href="/sgpc/depto/pedido/detalle/{{back}}"> &lt; </a>
 	{%else%}
-	<a href="#"><</a>
+	<a href="#"> &lt; </a>
 	{%endif%}
 	{%if next%}
-	<a href="/sgpc/depto/pedido/detalle/{{next}}">></a>
+	<a href="/sgpc/depto/pedido/detalle/{{next}}"> &gt; </a>
 	{%else%}
-	<a href="#">></a>
+	<a href="#"> &gt; </a>
 	{%endif%}
+	</p>
+	<table style="text-align: center;">
+		<tr><td colspan="5"><h3>Pedido</h3></td></tr>
+		<tr><td colspan="5"><strong>{{pedido}}</strong></td></tr>
+		<tr><td colspan="5"><h3>Productos</h3></td></tr>
+		<tr>
+			<td><strong>Descripción</strong></td>
+			<td><strong>Cantidad</strong></td>
+			<td><strong>Precio</strong></td>
+			<td><strong>Edición</strong></td>
+			<td><strong>Eliminación</strong></td>
+		</tr>
+		{%for p in productos%}
+		<tr>
+			<td>{{p.descripcion}}</td>
+			<td>{{p.cantidad}}</td>
+			<td>{{p.precio}}</td>
+			<td><a href="/sgpc/depto/pedido/editar/{{p.id}}">Editar</a></td>
+			<td><a href="#">Eliminar</a></td>
+		</tr>
+		{%endfor%}
+	</table>
 {%endblock%}
