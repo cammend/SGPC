@@ -76,6 +76,17 @@ def get_back_of_list_model(id, list_model):
 		else: aux = l
 	return None
 
+#Devuelve True si el pedido va para cualquier Depto, o sea q va para las unidades interesadas
+#Es True sólo si tiene los estados "No Aprobado" o "Contizacion Ordenada"
+def es_pedido_ordinario(id_pedido):
+	pedido = Pedido.objects.get(id=id_pedido)
+	est_p = pedido.estado
+	est_no_apr = Estado.objects.get(id=1) #No Aprobado
+	est_cot_ord = Estado.objects.get(id=6) #Cotización Ordenada
+	if (est_p == est_no_apr) or (est_p == est_cot_ord):
+		return True
+	return False
+
 
 #Se retorna un diccionario con todos los datos del pedido:
 #PEDIDO (estado: con contizacion elegida)
@@ -96,7 +107,18 @@ def gestion_presupuesto(id_pedido):
 	ctx['id_est_comprado'] = 8 #Estado 'Comprado'
 	return ctx
 
-#Cuando se compra una cotización elegida se debe cambiar de estado al pedido (comprado)
-def gestionar_presupuesto(id_pedido, id_estado):
+#Cambia el estado de un pedido
+def __cambiar_estado_pedido(id_pedido, id_estado):
 	estado = Estado.objects.get(id=id_estado)
 	Pedido.objects.filter(id=id_pedido).update(estado=estado)
+
+#Cuando se compra una cotización elegida se debe cambiar de estado al pedido (comprado)
+def gestionar_presupuesto(id_pedido, id_estado):
+	__cambiar_estado_pedido(id_pedido, id_estado)
+
+#Cuando se gestiona un 'No Publicado' solo pasa a 'Publicado'
+def gestionar_unidad_interesada(id_pedido, id_estado):
+	__cambiar_estado_pedido(id_pedido, id_estado)
+
+def gestionar_almacen(id_pedido, id_estado):
+	__cambiar_estado_pedido(id_pedido, id_estado)

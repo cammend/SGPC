@@ -96,6 +96,9 @@ def get_all_user_by_depto(user):
 	return DeptoUser.objects.filter(depto=get_depto_of_user(user)).order_by('depto')
 	#Retorna un Modelo "DeptoUser"
 
+def get_all_user_of_depto(user):
+	return DeptoUser.objects.filter(depto=get_depto_of_user(user)).order_by('depto').values('usuario')
+
 #Devuelve todos los usuarios NORMALES pertenecientes al Depto de éste Usuario ADMIN
 def get_normal_user_by_depto(user):
 	lista = get_users_by_type(NORMAL)

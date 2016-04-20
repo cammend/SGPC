@@ -1,0 +1,14 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}Pedidos no publicados{%endblock%}
+
+{%block principal%}
+	<h2>Pedidos no publicados</h2>
+	<ol>
+	{%for p in object_list%}
+<li><a href="/sgpc/depto/pedido/detalle/{{p.id}}/"><strong>Usuario: </strong>{{p.usuario}} - <strong>Fecha: </strong>{{p.fecha}}</a>
+<a href="/sgpc/depto/pedido/gestionar/{{p.id}}/">Publicar</a>
+</li>
+	{%endfor%}
+	</ol>
+{%endblock%}

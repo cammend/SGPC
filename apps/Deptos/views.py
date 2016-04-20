@@ -27,11 +27,18 @@ def home(request):
 		ctx['pedidos_gestion'] = get_pedidos_in_my_depto(request.user)
 	return render(request, 'Deptos/depto.html', ctx)
 
+#Listar todos los Deptos
 class VerDeptos(ListView):
 	model = Departamento
 	fields = ['nombre']
 	template_name = 'Deptos/lista_deptos.html'
 
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		user = self.request.user
+		if user.es_root():
+			return super(VerDeptos, self).dispatch(*args, **kwargs)
+		return redirect(user.get_url_home())
 
 #Vista para crear un nuevo Departamento
 class NuevoDepto(CreateView):

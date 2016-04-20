@@ -2,11 +2,14 @@ from django.shortcuts import render, redirect
 from .funciones import *
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .models import Pedido, Producto
 from .forms import FormPedido, FormProducto
 from apps.Deptos.funciones import *
 from GestionUser.funciones import *
+from GestionUser.models import Usuario
 from apps.Estado.models import EstadoDepto, Estado
 from apps.Cotizacion.models import Cotizacion, ProductosCotizados
 
@@ -40,7 +43,7 @@ def nuevoPedido(request):
 		if form.is_valid():
 			pedido = form.save(user)
 			request.session['id_pedido'] = pedido.id
-			return redirect('/sgpc/depto/producto/nuevo/')
+			return redirect('/sgpc/depto/pedido/producto/nuevo/')
 		else:
 			ctx['form'] = form
 	return render(request, 'Pedido/nuevo_pedido.html', ctx)
@@ -110,39 +113,85 @@ def gestionarPedido(request, id):
 	pedido = Pedido.objects.get(id=id)
 	estado_pedido = pedido.estado
 	estado_depto  = EstadoDepto.objects.get(depto=user.get_depto()).estado
-	if estado_pedido == estado_depto: #si el pedido corresponde al depto
+	if estado_pedido == estado_depto or es_pedido_ordinario(id): #si el pedido corresponde al depto
 		estados = Estado.objects.all()
-		if estado_depto == estados[0]: #NO PUBLICADO
+		if estado_pedido == estados[0]: #NO PUBLICADO
+			gestionar_unidad_interesada(id, 2)
+			ctx['titulo'] = 'Gestionado'
+			ctx['titulo_msg'] = 'Pedido Publicado'
+			ctx['url_redir'] = '/sgpc/depto/pedido/no_publicado/'
+			return render(request, 'GestionUser/info.html', ctx)
+
+		elif estado_pedido == estados[1]: #PUBLICADO
 			pass
-		elif estado_depto == estados[1]: #PUBLICADO
+		elif estado_pedido == estados[2]: #CON PRESUPUESTO ASIGNADO
 			pass
-		elif estado_depto == estados[2]: #CON PRESUPUESTO ASIGNADO
+		elif estado_pedido == estados[3]: #APROBADO POR GERENTE
 			pass
-		elif estado_depto == estados[3]: #APROBADO POR GERENTE
+		elif estado_pedido == estados[4]: #COTIZADO
 			pass
-		elif estado_depto == estados[4]: #COTIZADO
+		elif estado_pedido == estados[5]: #CON COTIZACIONES ORDENADAS
 			pass
-		elif estado_depto == estados[5]: #CON COTIZACIONES ORDENADAS
-			pass
-		elif estado_depto == estados[6]: #CON COTIZACION ELEGIDA
+		elif estado_pedido == estados[6]: #CON COTIZACION ELEGIDA
 			if request.method == 'POST':
 				if 'id_estado' in request.POST:
 					id_estado = request.POST['id_estado']
 					gestionar_presupuesto(id, id_estado)
 					ctx['titulo'] = 'Gestionado'
-					ctx['titulo_msg'] = 'Estado Cambiado'
+					ctx['titulo_msg'] = 'Pedido Comprado'
 					ctx['url_redir'] = user.get_url_home()
 					return render(request, 'GestionUser/info.html', ctx)
 			else:
 				ctx = gestion_presupuesto(id)
 			return render(request, 'Gestion/cotizacion_elegida.html', ctx)
-		elif estado_depto == estados[7]: #COMPRADO
+
+		elif estado_pedido == estados[7]: #COMPRADO
 			pass
-		elif estado_depto == estados[8]: #EN ALMACEN
+		elif estado_pedido == estados[8]: #EN ALMACEN
+			gestionar_almacen(id, 10)
+			ctx['titulo'] = 'Gestionado'
+			ctx['titulo_msg'] = 'Pedido Publicado'
+			ctx['url_redir'] = '/sgpc/depto/pedido/no_publicado/'
+			return render(request, 'GestionUser/info.html', ctx)
+		elif estado_pedido == estados[9]: #RETIRADO DE ALMACEN
 			pass
-		elif estado_depto == estados[9]: #RETIRADO DE ALMACEN
-			pass
-		elif estado_depto == estados[10]: #CANCELADO
+		elif estado_pedido == estados[10]: #CANCELADO
 			pass
 
 	return redirect(user.get_url_home())
+
+class ListaPedidosNoPublicados(ListView):
+	model = Pedido
+	template_name = 'Pedido/pedidos_no_publicados.html'
+
+	def get_queryset(self):
+		users = get_all_user_of_depto(self.request.user)
+		estado = Estado.objects.get(id=1) #No publicado
+		pedidos = Pedido.objects.filter(usuario=users, estado=estado)
+		self.request.session['lista_id_pedido'] = generate_list_of_id(pedidos)
+		return pedidos
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		user = self.request.user
+		if not user.es_root():
+			return super(ListaPedidosNoPublicados, self).dispatch(*args, **kwargs)
+		return redirect(user.get_url_home())
+
+class ListaPedidosEnAlmacen(ListView):
+	model = Pedido
+	template_name = 'Pedido/pedidos_en_almacen.html'
+
+	def get_queryset(self):
+		users = get_all_user_of_depto(self.request.user)
+		estado = Estado.objects.get(id=9) #En Almacen
+		pedidos = Pedido.objects.filter(usuario=users, estado=estado)
+		self.request.session['lista_id_pedido'] = generate_list_of_id(pedidos)
+		return pedidos
+
+	@method_decorator(login_required)
+	def dispatch(self, *args, **kwargs):
+		user = self.request.user
+		if not user.es_root():
+			return super(ListaPedidosEnAlmacen, self).dispatch(*args, **kwargs)
+		return redirect(user.get_url_home())
