@@ -3,7 +3,6 @@ from .models import Pedido, Producto
 from apps.Estado.models import Estado
 
 
-
 class FormPedido(forms.ModelForm):
 	class Meta:
 		model = Pedido
@@ -31,3 +30,17 @@ class FormProducto(forms.ModelForm):
 		if commit:
 			producto.save()
 		return producto
+
+class FormAsignaRenglon(forms.ModelForm):
+
+	def save(self, commit=True):
+		ids = self.data.getlist('id')
+		renglones = self.data.getlist('renglon')
+		aux = 0
+		for id in ids:
+			Producto.objects.filter(id=id).update(renglon=renglones[aux])
+			aux += 1
+
+	class Meta:
+		model = Producto
+		fields = ['renglon']

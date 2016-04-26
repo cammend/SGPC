@@ -1,10 +1,17 @@
 {%extends 'Deptos/base_depto.html'%}
 
-{%block titulo%}{{titulo}}{%endblock%}
+{%block titulo%}Detalle{%endblock%}
 
 {%block principal%}
-	<p>
 	<h2>Detalle del pedido</h2>
+	{%if form_gestion%}
+<form action="/sgpc/depto/pedido/gestionar/" method="post">{%csrf_token%}
+	{{form_gestion}}
+	<input type="hidden" name="id" value="{{pedido.id}}" />
+	<input type="submit" value="Gestionar" />
+</form>
+	{%endif%}
+	<!-- <p>
 	{%if back%}
 	<a href="/sgpc/depto/pedido/detalle/{{back}}"> &lt; </a>
 	{%else%}
@@ -15,25 +22,49 @@
 	{%else%}
 	<a href="#"> &gt; </a>
 	{%endif%}
-	</p>
-	<table style="text-align: center;">
-		<tr><td colspan="5"><h3>Pedido</h3></td></tr>
-		<tr><td colspan="5"><strong>{{pedido}}</strong></td></tr>
-		<tr><td colspan="5"><h3>Productos</h3></td></tr>
+	</p> -->
+	<table style="text-align: center;" border="1">
+		<tr><td colspan="6"><h3>Pedido</h3>
+{%if editar_pedido%}
+<a href="editar/">Editar</a>
+<a href="eliminar">Eliminar</a>
+{%endif%}
+		</td></tr>
+		<tr><td colspan="4"><strong>Justificación</strong></td>
+			<td colspan="2"><strong>Fecha</strong></td>
+		</tr>
+		<tr><td colspan="4">{{pedido.justificacion}}</td>
+			<td colspan="2">{{pedido.fecha}}</td>
+		</tr>
+		<tr><td colspan="6"><h3>Productos</h3>
+{%if editar_pedido%}
+<a href="producto/agregar/">Agregar</a>
+{%endif%}
+		</td></tr>
 		<tr>
-			<td><strong>Descripción</strong></td>
+{%if editar_pedido%}
+			<td colspan="3"><strong>Descripción</strong></td>
+{%else%}
+			<td colspan="5"><strong>Descripción</strong></td>
+{%endif%}
 			<td><strong>Cantidad</strong></td>
-			<td><strong>Precio</strong></td>
+{%if editar_pedido%}
 			<td><strong>Edición</strong></td>
 			<td><strong>Eliminación</strong></td>
+{%endif%}
 		</tr>
 		{%for p in productos%}
 		<tr>
-			<td>{{p.descripcion}}</td>
+{%if editar_pedido%}
+			<td colspan="3">{{p.descripcion}}</td>
+{%else%}
+			<td colspan="5">{{p.descripcion}}</td>
+{%endif%}
 			<td>{{p.cantidad}}</td>
-			<td>{{p.precio}}</td>
-			<td><a href="/sgpc/depto/pedido/editar/{{p.id}}">Editar</a></td>
-			<td><a href="#">Eliminar</a></td>
+{%if editar_pedido%}
+			<td><a href="producto/{{p.id}}/editar/">Editar</a></td>
+			<td><a href="producto/{{p.id}}/eliminar/">Eliminar</a></td>
+{%endif%}
 		</tr>
 		{%endfor%}
 	</table>

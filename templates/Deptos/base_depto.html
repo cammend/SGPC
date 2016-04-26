@@ -10,6 +10,14 @@
 {%endif%}
 	<li><a href="/sgpc/depto/pedido/nuevo/">Nuevo Pedido</a></li>
 	<li><a href="/sgpc/depto/pedido/no_publicado/">Pedidos no Publicados</a></li>
-	<li><a href="/sgpc/depto/pedido/en_almacen/">Pedidos en Almacén</a></li>
+	<li><a href="#">Ver seguimiento</a></li>
 </ul>
+{%if reciente%}
+<h2>Actividad Reciente</h2>
+<ul>
+{%for rec in reciente%}
+	<li><a href="{{rec.url}}">{{rec.nombre}}</a></li>
+{%endfor%}
+</ul>
+{%endif%}
 {%endblock%}

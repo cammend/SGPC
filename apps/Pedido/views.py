@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .funciones import *
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -12,186 +12,153 @@ from GestionUser.funciones import *
 from GestionUser.models import Usuario
 from apps.Estado.models import EstadoDepto, Estado
 from apps.Cotizacion.models import Cotizacion, ProductosCotizados
+from .view_based_class import *
+from apps.Cotizacion.forms import *
+from django.db.models import Sum, F, Avg, FloatField, ExpressionWrapper
+#from apps.Transicion.forms import FormGestionar
 
-# Create your views here.
-@login_required
-def verPedidos(request):
+
+def gestionarPedido(request):
 	user = request.user
-	if user.es_root(): return redirect(user.get_url_home)
-	lista = get_all_pedidos_by_depto(user)
-	lista_id = generate_list_of_id(lista)
-	request.session['lista_id_pedido'] = lista_id
-	ctx = {'lista': lista}
-	return render(request, 'Pedido/ver_pedidos.html', ctx)
-
-
-class DetallePedido(DetailView):
-	model = Pedido
-	template_name = 'probar_listas.html'
-	slug_url_kwarg = 'id'
-	slug_field = 'id'
-
-@login_required
-def nuevoPedido(request):
-	user = request.user
-	if user.es_root(): return redirect(user.get_url_home)
-	form = FormPedido()
-	ctx = {'titulo':'Nuevo Pedido', 'h2':'Nuevo Pedido'}
-	ctx['form'] = form
+	id = request.POST['id']
+	#Obtenemos las variables
 	if request.method == 'POST':
-		form = FormPedido(data=request.POST)
-		if form.is_valid():
-			pedido = form.save(user)
-			request.session['id_pedido'] = pedido.id
-			return redirect('/sgpc/depto/pedido/producto/nuevo/')
+		sig = request.POST['est_sig']
+		if sig:
+			pedido = Pedido.objects.get(id=id)
+			est_act = Estado.objects.get(id=request.POST['est_act'])
+			est_sig = Estado.objects.get(id=request.POST['est_sig'])
+			transicion = Transicion.objects.get(estadoActual=est_act, estadoSiguiente=est_sig)
+			#guardamos el historial
+			historial = HistorialTransicion()
+			historial.pedido = pedido
+			historial.usuario = user
+			historial.transicion = transicion
+			historial.save()
+			#cambiamos de estado al pedido
+			Pedido.objects.filter(id=id).update(estado=est_sig)
+
+			ctx = {'titulo':'Pedido Gestionado', 'titulo_msg': 'Pedido gestionado exitosamente.'}
+			ctx['url_redir'] = user.get_url_home()
+			return render(request, 'GestionUser/info.html', ctx)
 		else:
-			ctx['form'] = form
-	return render(request, 'Pedido/nuevo_pedido.html', ctx)
+			ctx = {'titulo':'Error', 'titulo_msg':'Formulario no válido', 'msg':'Debe seleccionar una opción.'}
+			ctx['url_redir'] = '/sgpc/depto/pedido/no_publicado/'+str(id)+'/'
+			return render(request, 'GestionUser/info.html', ctx)
 
-@login_required
-def nuevoProducto(request):
-	user = request.user
-	if user.es_root(): return redirect(user.get_url_home)
-	form = FormProducto()
-	ctx = {'form': form}
-	id_pedido = None
-	#obteniendo el pedido
-	if 'id_pedido' in request.session: id_pedido = request.session['id_pedido']
-	else: redirect('/sgpc/depto/pedido/nuevo/')
-
-	pedido = Pedido.objects.get(id=id_pedido)
-	ctx['pedido'] = pedido
-
-	if request.method == 'POST':
-		form = FormProducto(data=request.POST)
-		if form.is_valid():
-			form.save(pedido)
-		else:
-			ctx['form'] = form
-	return render(request, 'Pedido/nuevo_producto.html', ctx)
-
-@login_required
-def finalizarPedido(request):
-	user = request.user
-	if user.es_root(): return redirect(user.get_url_home)
-	id = request.session.pop('id_pedido',None)
-	print(id)
-	ctx = {'titulo': 'Guardado',
-		   'titulo_msg': 'Finalizado!',
-		   'msg': 'Pedido finalizado!',
-		   'url_redir': request.user.get_url_home()}
+	ctx = {'titulo':'Error', 'titulo_msg':'No hay datos', 'url_redir':user.get_url_home()}
 	return render(request, 'GestionUser/info.html', ctx)
 
-@login_required
-def detallePedido(request, id):
-	user = request.user
-	ctx = {}
-	if user.es_root(): return redirect(user.get_url_home)
-	depto_u = get_depto_of_user(user)
-	pedido = Pedido.objects.get(id=id)
-	depto_p = get_depto_of_pedido(pedido)
-	if depto_u == depto_p:
-		list_model = request.session['lista_id_pedido']
-		productos = Producto.objects.filter(pedido=pedido)
-		ctx['pedido'] = pedido
-		ctx['productos'] = productos
-		ctx['next'] = get_next_of_list_model(id, list_model)
-		ctx['back'] = get_back_of_list_model(id, list_model)
-	return render(request, 'Pedido/detalle_pedido.html', ctx)
 
-class EditarProducto(UpdateView):
-	model = Producto
-	fields = ['descripcion', 'cantidad', 'precio']
-	template_name = 'Pedido/editar_pedido.html'
-	slug_url_kwarg = 'id'
-	slug_field = 'id'
-	success_url = '/sgpc/depto/pedido/ver/'
 
-def gestionarPedido(request, id):
-	user = request.user
-	ctx = {}
-	pedido = Pedido.objects.get(id=id)
-	estado_pedido = pedido.estado
-	estado_depto  = EstadoDepto.objects.get(depto=user.get_depto()).estado
-	if estado_pedido == estado_depto or es_pedido_ordinario(id): #si el pedido corresponde al depto
-		estados = Estado.objects.all()
-		if estado_pedido == estados[0]: #NO PUBLICADO
-			gestionar_unidad_interesada(id, 2)
-			ctx['titulo'] = 'Gestionado'
-			ctx['titulo_msg'] = 'Pedido Publicado'
-			ctx['url_redir'] = '/sgpc/depto/pedido/no_publicado/'
-			return render(request, 'GestionUser/info.html', ctx)
-
-		elif estado_pedido == estados[1]: #PUBLICADO
-			pass
-		elif estado_pedido == estados[2]: #CON PRESUPUESTO ASIGNADO
-			pass
-		elif estado_pedido == estados[3]: #APROBADO POR GERENTE
-			pass
-		elif estado_pedido == estados[4]: #COTIZADO
-			pass
-		elif estado_pedido == estados[5]: #CON COTIZACIONES ORDENADAS
-			pass
-		elif estado_pedido == estados[6]: #CON COTIZACION ELEGIDA
-			if request.method == 'POST':
-				if 'id_estado' in request.POST:
-					id_estado = request.POST['id_estado']
-					gestionar_presupuesto(id, id_estado)
-					ctx['titulo'] = 'Gestionado'
-					ctx['titulo_msg'] = 'Pedido Comprado'
-					ctx['url_redir'] = user.get_url_home()
-					return render(request, 'GestionUser/info.html', ctx)
-			else:
-				ctx = gestion_presupuesto(id)
-			return render(request, 'Gestion/cotizacion_elegida.html', ctx)
-
-		elif estado_pedido == estados[7]: #COMPRADO
-			pass
-		elif estado_pedido == estados[8]: #EN ALMACEN
-			gestionar_almacen(id, 10)
-			ctx['titulo'] = 'Gestionado'
-			ctx['titulo_msg'] = 'Pedido Publicado'
-			ctx['url_redir'] = '/sgpc/depto/pedido/no_publicado/'
-			return render(request, 'GestionUser/info.html', ctx)
-		elif estado_pedido == estados[9]: #RETIRADO DE ALMACEN
-			pass
-		elif estado_pedido == estados[10]: #CANCELADO
-			pass
-
-	return redirect(user.get_url_home())
-
-class ListaPedidosNoPublicados(ListView):
-	model = Pedido
+#Listar Pedidos no publicados
+class ListarPedidosNoPublicados(BasePedidoListView):
+	pedidos_no_publicados = True
 	template_name = 'Pedido/pedidos_no_publicados.html'
 
-	def get_queryset(self):
-		users = get_all_user_of_depto(self.request.user)
-		estado = Estado.objects.get(id=1) #No publicado
-		pedidos = Pedido.objects.filter(usuario=users, estado=estado)
-		self.request.session['lista_id_pedido'] = generate_list_of_id(pedidos)
-		return pedidos
+#Detalle de un pedido no publicado
+class DetallePedidoNoPublicado(BasePedidoGestionDetailView):
+	template_name = 'Pedido/detalle_pedido.html'
+	pedido_no_publico = True
 
-	@method_decorator(login_required)
-	def dispatch(self, *args, **kwargs):
-		user = self.request.user
-		if not user.es_root():
-			return super(ListaPedidosNoPublicados, self).dispatch(*args, **kwargs)
-		return redirect(user.get_url_home())
+#Editar un pedido no publicado
+class EditarPedidoNoPublicado(BasePedidoUpdateView):
+	fields = ['justificacion','fecha']
+	template_name = 'Pedido/editar_pedidos.html'
+	nombre_actividad = 'Se editó un pedido no publicado'
 
-class ListaPedidosEnAlmacen(ListView):
-	model = Pedido
-	template_name = 'Pedido/pedidos_en_almacen.html'
+#Eliminar un pedido no publicado
+class EliminarPedidoNoPublicado(BasePedidoDeleteView):
+	no_publicado = True
+	nombre_actividad = 'Se eliminó un pedido'
 
-	def get_queryset(self):
-		users = get_all_user_of_depto(self.request.user)
-		estado = Estado.objects.get(id=9) #En Almacen
-		pedidos = Pedido.objects.filter(usuario=users, estado=estado)
-		self.request.session['lista_id_pedido'] = generate_list_of_id(pedidos)
-		return pedidos
+#Crear un nuevo pedido
+class CrearPedidoNoPublicado(BasePedidoCreateView):
+	template_name = 'Pedido/nuevo_pedido.html'
+	fields = ['justificacion', 'fecha']
 
-	@method_decorator(login_required)
-	def dispatch(self, *args, **kwargs):
-		user = self.request.user
-		if not user.es_root():
-			return super(ListaPedidosEnAlmacen, self).dispatch(*args, **kwargs)
-		return redirect(user.get_url_home())
+#Agregar un nuevo producto al pedido
+class NuevoProducto(BaseProductoCreateView):
+	model = Producto
+	fields = ['descripcion', 'cantidad']
+	template_name = 'Pedido/nuevo_producto.html'
+
+#Eliminar un producto
+class EliminarProductoNoPublicado(BaseProductoDeleteView):
+	success_url = '/sgpc/depto/pedido/no_publicado/'
+
+#Editar un producto
+class EditarProductoNoPublicado(BaseProductoUpdateView):
+	success_url = '/sgpc/depto/home/'
+	fields = ['descripcion', 'cantidad']
+
+class DetallePedidoGestionar(BasePedidoGestionDetailView):
+	pedido_para_gestionar = True
+	id_estado = 0
+	template_name = None
+
+def guardarRenglon(request, id):
+	if request.method == 'POST':
+		form = FormAsignaRenglon(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect(recortar_url(request.path, 5))
+			#pedido = Pedido.objects.filter(id=id_pedido)
+			#pedido.update(renglon=request.POST[''])
+		else:
+			ctx = {'titulo': 'Error', 'titulo_msg': 'Form no válido'}
+			return render(request, 'GestionUser/info.html', ctx)
+
+	pedido = Pedido.objects.get(id=id)
+	prods = Producto.objects.filter(pedido=pedido)
+	ctx = {}
+	ctx['productos'] = prods
+	form = FormAsignaRenglon()
+	form.fields['renglon'].label=''
+	ctx['form'] = form
+	return render(request, 'Pedido/asignar_presupuesto.html', ctx)
+
+def guardarCotizacion(request, id):
+	request.session['url_cot'] = request.path
+	pedido = Pedido.objects.get(id=id)
+	productos = Producto.objects.filter(pedido=pedido)
+	cotizaciones = Cotizacion.objects.filter(pedido=pedido)
+	if request.method == 'POST':
+		form = FormCotizacion(request.POST)
+		if form.is_valid():
+			form.save(pedido)
+
+		else:
+			ctx = {'titulo': 'Error', 'titulo_msg': 'Form no válido'}
+			return render(request, 'GestionUser/info.html', ctx)
+
+	form = FormCotizacion()
+	ctx = {'form': form, 'pedido':pedido, 'productos':productos, 'cotizaciones':cotizaciones}
+	ctx['url_back'] = recortar_url(request.path, 5)
+	return render(request, 'Pedido/agregar_cotizacion.html', ctx)
+
+def guardarProductosCotizados(request, id):
+	cotizacion = Cotizacion.objects.get(id=id)
+	pedido = cotizacion.pedido
+	if request.method == 'POST':
+		form = FormProductoCotizado(request.POST)
+		if form.is_valid():
+			id_cot = request.POST['id_cot']
+			form.save(cotizacion)
+
+		else:
+			ctx = {'titulo': 'Error', 'titulo_msg': 'Form no válido'}
+			return render(request, 'GestionUser/info.html', ctx)
+
+	productos = ProductosCotizados.objects.filter(cotizacion=cotizacion)
+	if productos:
+		productos = productos.annotate( total=ExpressionWrapper( F('cantidad')*F('precio'), output_field=FloatField() ) )
+	form = FormProductoCotizado()
+	form.fields['producto'].choices = get_choice_for_cot(cotizacion)
+	ctx = {'form': form, 'pedido':pedido, 'productos':productos, 'cotizacion':cotizacion}
+	if 'url_cot' in request.session:
+		ctx['url_back'] = request.session['url_cot']
+	else:
+		ctx = {'titulo':'Error', 'titulo_msg': 'Acceso por url', 'msg':'Has intentado acceder a la página directamente por url.'}
+		return render(request, 'GestionUser/info.html', ctx)
+	return render(request, 'Pedido/pedido_de_cotizacion.html', ctx)

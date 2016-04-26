@@ -1,0 +1,40 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}Detalle{%endblock%}
+
+{%block principal%}
+	<h2>Detalle del pedido - Aprobar Pedido</h2>
+	{%if form_gestion%}
+<form action="/sgpc/depto/pedido/gestionar/" method="post">{%csrf_token%}
+	{{form_gestion}}
+	<input type="hidden" name="id" value="{{pedido.id}}" />
+	<input type="submit" value="Gestionar" />
+</form>
+	{%endif%}
+	<table style="text-align: center;" border="1">
+		<tr><td colspan="6"><h3>Pedido</h3>
+		</td></tr>
+		<tr><td colspan="4"><strong>Justificación</strong></td>
+			<td colspan="2"><strong>Fecha</strong></td>
+		</tr>
+		<tr><td colspan="4">{{pedido.justificacion}}</td>
+			<td colspan="2">{{pedido.fecha}}</td>
+		</tr>
+		<tr><td colspan="6"><h3>Productos</h3>
+		</td></tr>
+		<tr>
+			<td colspan="4"><strong>Descripción</strong></td>
+			<td><strong>Cantidad</strong></td>
+			<td><strong>Renglón</strong></td>
+		</tr>
+
+		{%for p in productos%}
+		<tr>
+			<td colspan="4">{{p.descripcion}}</td>
+			<td>{{p.cantidad}}</td>
+			<td>{{p.renglon}}</td>
+		</tr>
+		{%endfor%}
+
+	</table>
+{%endblock%}

@@ -1,0 +1,12 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}Lista{%endblock%}
+
+{%block principal%}
+<h2>{%if h2%}{{h2}}{%else%}Lista{%endif%}</h2>
+<ul>
+{%for l in object_list%}
+	<li>{{l}}</li>
+{%endfor%}
+</ul>
+{%endblock%}

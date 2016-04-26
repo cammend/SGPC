@@ -153,6 +153,7 @@ def entrar(request):
 			p = form.cleaned_data['password']
 			user = authenticate(username=u, password=p) #comprobamos usuario y contraseña
 			if user is not None and user.is_active: #si existe y si está activo
+				request.session['reciente'] = []
 				login(request, user) #logueado en las sesion de django
 				# dependiendo del depto al q pertenece el user así se redirecionará
 				return redirect( get_url_redir(request) )

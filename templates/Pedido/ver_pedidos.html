@@ -1,12 +1,17 @@
 {%extends 'Deptos/base_depto.html'%}
 
-{%block titulo%}SGPC - ver pedidos{%endblock%}
+{%block titulo%}{{titulo}}{%endblock%}
 
 {%block principal%}
-	<h2>Lista de pedidos</h2>
+	<h2>{{h2}}</h2>
 	<ul>
-	{%for l in lista%}
-		<li><a href="/sgpc/depto/pedido/detalle/{{l.id}}">{{l}}</a></li>
+	{%for p in lista%}
+		<li>{{p}}
+<form method="post" action="{{url_action}}">{%csrf_token%}
+<input type="hidden" name="id_pedido" value="{{p.id}}" />
+<input type="submit" value="Ver Detalle" />
+</form>
+		</li>
 	{%endfor%}
 	</ul>
 {%endblock%}

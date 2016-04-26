@@ -19,7 +19,7 @@ class HistorialTransicion(models.Model):
 	pedido = models.ForeignKey(Pedido)
 	transicion = models.ForeignKey(Transicion,verbose_name='Transición')
 	usuario = models.ForeignKey(Usuario)
-	fecha = models.DateField()
+	fecha = models.DateField(auto_now_add=True)
 
 	def __str__(self):
 		return 'Id Pedido: %s - Fecha: %s - Transición: %s' % (self.pedido.id, str(self.fecha), self.transicion)

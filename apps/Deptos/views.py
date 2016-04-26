@@ -1,55 +1,31 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView
+from django.shortcuts import render
+from apps.Pedido.view_based_class import *
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
-from .models import Departamento
-from apps.Estado.funciones import *
-from .funciones import *
-
 # Create your views here.
 
-#Vista para mostrar una página correspondiente para un usuario logueado!
-@login_required
-def home(request):
-	user = request.user
-	ctx = {'titulo':'Gestión'}
-	if user.es_root(): #si es usuario ROOT... no devería ver ésta vista
-		return redirect('/sgpc/cuentas/') #y lo redireccionamos
-	elif user.es_admin():
-		ctx['is_admin'] = True
+#DeptoHome, muestra una lista de los pedidos para ser gestionados
+class Home(BasePedidoListView):
+	pedidos_para_gestionar = True
+	#pedidos_no_publicados = False
+	template_name = 'Deptos/depto.html'
 
-	#Se crea la página para la gestión de los pedidos dependiendo el Depto
-	ctx['usuario'] = user
-	ctx['depto'] = get_depto_of_user(user)
-	if exist_depto_in_state(user): #si el depto existe en el modelo 'EstadoDepto'
-		ctx['gestionar'] = True
-		ctx['pedidos_gestion'] = get_pedidos_in_my_depto(request.user)
-	return render(request, 'Deptos/depto.html', ctx)
-
-#Listar todos los Deptos
-class VerDeptos(ListView):
+#Listar todos los Deptos, solo para usuario root
+class VerDeptos(BaseModeloListView):
 	model = Departamento
 	fields = ['nombre']
 	template_name = 'Deptos/lista_deptos.html'
+	user_root = True
+	user_admin = False
+	user_normal = False
 
-	@method_decorator(login_required)
-	def dispatch(self, *args, **kwargs):
-		user = self.request.user
-		if user.es_root():
-			return super(VerDeptos, self).dispatch(*args, **kwargs)
-		return redirect(user.get_url_home())
-
-#Vista para crear un nuevo Departamento
-class NuevoDepto(CreateView):
+#Crea un nuevo depto, solo para usuario root
+class NuevoDepto(BaseModeloCreateView):
 	model = Departamento
 	fields = ['nombre']
-	template_name = 'Deptos/nuevo_depto.html'
 	success_url = '/sgpc/depto/lista/'
-
-	@method_decorator(login_required)
-	def dispatch(self, *args, **kwargs):
-		user = self.request.user
-		if user.es_root():
-			return super(NuevoDepto, self).dispatch(*args, **kwargs)
-		return redirect(user.get_url_home())
+	template_name = 'Deptos/nuevo_depto.html'
+	user_root = True #la vista sólo la puede usar root
+	user_admin = False
+	user_normal = False

@@ -7,11 +7,11 @@
 
 <section>
 	<h3>Pedidos para gestionar</h3>
-	{%if pedidos_gestion%}
+	{%if object_list%}
 		<ul>
-		{%for p in pedidos_gestion%}
+		{%for p in object_list%}
 			<li>
-<a href="/sgpc/depto/pedido/gestionar/{{p.id}}"><strong>Depto: </strong>{{p.get_depto}} - <strong>Fecha: </strong>{{p.fecha}}</a>
+<a href="/sgpc/depto/pedido/gestionar/{{p.id}}/"><strong>Depto: </strong>{{p.get_depto}} - <strong>Fecha: </strong>{{p.fecha}}</a>
 			</li>
 		</ul>
 		{%endfor%}

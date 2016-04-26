@@ -23,9 +23,9 @@ class Cotizacion(models.Model):
 class ProductosCotizados(models.Model):
 	producto = models.ForeignKey(Producto)
 	cotizacion = models.ForeignKey(Cotizacion, verbose_name='Cotización')
-	garantia = models.IntegerField(blank=True, null=True)
-	cantidad = models.IntegerField()
-	precio = models.FloatField()
+	garantia = models.IntegerField(blank=True, null=True, verbose_name='Garantía (meses)')
+	cantidad = models.IntegerField(null=True)
+	precio = models.FloatField(null=True)
 
 	def __str__(self):
 		return 'Id Cotización: %i - %s' % (self.cotizacion.id, self.producto)
