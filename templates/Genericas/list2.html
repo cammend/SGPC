@@ -1,0 +1,92 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}Gestión de pedidos{%endblock%}
+
+{%block principal%}
+
+{% if page_obj %}
+<ul>
+  <h2>Pedido</h2>
+  {% for pedido in page_obj %}
+    {%if estado == 1%}
+      <a href="{{pedido.id}}">Editar</a>
+      <a href="{{pedido.id}}">Eliminar</a>
+    {%endif%}
+    <li><strong>Usuario: </strong>{{ pedido.usuario }}</li>
+    <li><strong>Justificacion: </strong>{{ pedido.justificacion }}</li>
+    <li><strong>Fecha: </strong>{{ pedido.fecha }}</li>
+    <h3>Productos</h3>
+    {%if estado == 1%}
+      <a href="#">Agregar</a>
+    {%endif%}
+    {% if pedido.producto_set.all%}
+      <ol style="margin-left: 30px;">
+    		{%for producto in pedido.producto_set.all%}
+          <li>
+            <p><strong>Descripción: </strong>{{producto.descripcion}} </br>
+            <strong>Cantidad: </strong>{{producto.cantidad}}</p>
+          </li>
+    		{%endfor%}
+    	</ol>
+    {%endif%}
+    {% if estado > 3 %}
+      <h3>Cotizaciones</h3>
+    {% endif%}
+    {%if estado == 4%}
+      <a href="#">Agregar</a>
+    {%endif%}
+    {% if pedido.cotizacion_set.all %}
+      <ol style="margin-left: 30px;">
+        {%for cotizacion in pedido.cotizacion_set.all%}
+          <li>
+          {%if estado == 4%}
+            <a href="{{cotizacion.id}}">Editar</a><a href="{{cotizacion.id}}">Eliminar</a>
+          {%elif estado == 5%}
+            <a href="{{cotizacion.id}}">Asignar Prioridad</a>
+          {%endif%}
+            <p><strong>Proveedor: </strong>{{cotizacion.proveedor}} </br>
+            <strong>Fecha Cotización: </strong>{{cotizacion.fecha_cotizacion}} </br>
+            <strong>Fecha Entrega: </strong>{{cotizacion.fecha_entrega}}</p>
+          </li>
+          <ol style="margin-left: 60px;">
+            <h3>Productos Cotizados</h3>
+            {%for producto in cotizacion.productoscotizados_set.all%}
+              <li>
+              {%if estado == 4%}
+                <a href="{{producto.id}}">Editar</a><a href="{{producto.id}}">Eliminar</a>
+              {%endif%}
+                <p><strong>Producto: </strong>{{producto.producto}} </br>
+                <strong>Cantidad: </strong>{{producto.cantidad}} </br>
+                <strong>Precio: </strong>{{producto.precio}} </br>
+                <strong>Total: </strong>{{producto.total}}</p>
+              </li>
+            {%endfor%}
+          </ol>
+        {%endfor%}
+      </ol>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        <span class="current">
+            Pedido {{ page_obj.number }} de {{ paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        {% endif %}
+    </span>
+</div>
+
+{%else%}
+<h2>Pedidos</h2>
+<p>No hay pedidos para gestionar.</p>
+{%endif%}
+
+{%endblock%}
