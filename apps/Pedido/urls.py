@@ -28,4 +28,5 @@ urlpatterns = patterns('',
     url(r'^gestionar/cotizaciones/(?P<id>[-\w]+)/$', AsignarPrioridadCot.as_view()),
     url(r'^para_comprar/$', ListarPedidosParaComprar.as_view()),
     url(r'^para_comprar/(?P<id>[-\w]+)/$', DetallePedidoParaComprar.as_view()),
+
 )

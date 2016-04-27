@@ -19,10 +19,10 @@ from GestionUser.views import entrar
 
 urlpatterns = [
     url(r'^$', entrar),
-    url(r'^sgpc/$', entrar),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^sgpc/cuentas/',include('GestionUser.urls')),
     url(r'^sgpc/depto/',include('apps.Deptos.urls')),
     url(r'^sgpc/root/',include('apps.Root.urls')),
     url(r'^sgpc/depto/cotizacion/',include('apps.Cotizacion.urls')),
+    url(r'^sgpc/',include('apps.Depto.urls')),
 ]

@@ -29,3 +29,6 @@ class ProductosCotizados(models.Model):
 
 	def __str__(self):
 		return 'Id Cotización: %i - %s' % (self.cotizacion.id, self.producto)
+
+	def total(self):
+		return self.cantidad * self.precio

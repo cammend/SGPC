@@ -1,4 +1,5 @@
 from django.db import models
+from apps.Estado.models import Estado, EstadoDepto
 from django.contrib.auth.models import (
 	BaseUserManager, AbstractBaseUser, PermissionsMixin
 )
@@ -133,6 +134,10 @@ class Usuario(AbstractBaseUser):
 		if self.tipoUser == 0:
 			return None
 		return DeptoUser.objects.get(usuario=self).depto
+
+	def get_estado(self):
+		if self.tipoUser == 0: return None
+		return EstadoDepto.objects.get(depto=self.get_depto()).estado
 
 	def get_url_home(self):
 		if self.tipoUser == 0:

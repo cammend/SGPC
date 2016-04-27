@@ -15,6 +15,7 @@ from apps.Cotizacion.models import Cotizacion, ProductosCotizados
 from .view_based_class import *
 from apps.Cotizacion.forms import *
 from django.db.models import Sum, F, Avg, FloatField, ExpressionWrapper
+from django.views.generic.detail import SingleObjectMixin
 #from apps.Transicion.forms import FormGestionar
 
 
@@ -186,4 +187,3 @@ def guardarProductosCotizados(request, id):
 		ctx = {'titulo':'Error', 'titulo_msg': 'Acceso por url', 'msg':'Has intentado acceder a la página directamente por url.'}
 		return render(request, 'GestionUser/info.html', ctx)
 	return render(request, 'Pedido/pedido_de_cotizacion.html', ctx)
-

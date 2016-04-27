@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'apps.Estado',
     'apps.Pedido',
     'apps.Transicion',
+    'apps.Depto',
 )
 
 MIDDLEWARE_CLASSES = (
