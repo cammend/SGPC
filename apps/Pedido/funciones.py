@@ -52,6 +52,8 @@ def get_template_for_depto(depto):
 		return 'Pedido/pedido_gerencia.html'
 	elif depto == __depto[2]: #COMPRAS
 		return 'Pedido/pedido_compras.html'
+	elif depto == __depto[3]: #DEPTOS TECNICOS
+		return 'Pedido/pedido_deptos.html'
 	return 'Pedido/detalle_pedido.html'
 
 def pedido_se_puede_gestionar(pedido):
@@ -87,11 +89,18 @@ def pedido_se_puede_gestionar(pedido):
 			if not productos:
 				return False
 		return True
+
+#Solo si todas las cotizaciones están con alguna prioridad asignada
 	elif estado_pedido == estados[4]: #COTIZADO
-		pass
+		cotizaciones = Cotizacion.objects.filter(pedido=pedido)
+		for c in cotizaciones:
+			if c.prioridad is None:
+				return False
+		return True
+
 	elif estado_pedido == estados[5]: #CON COTIZACIONES ORDENADAS
 		pass
-	elif estado_pedido == estados[6]: #CON COTIZACION ELEGIDA}
+	elif estado_pedido == estados[6]: #CON COTIZACION ELEGIDA
 		pass
 	elif estado_pedido == estados[7]: #COMPRADO
 		pass

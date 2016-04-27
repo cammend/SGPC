@@ -1,0 +1,46 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}Asignar Prioridad{%endblock%}
+
+{%block principal%}
+<form method="post">{%csrf_token%}
+	<h2>Asignar Prioridad</h2>
+	<p>Se debe asignar una prioridad y también se puede cancelar.</p>
+	{{form.as_p}}
+	<input type="submit" value="Guardar Cambios"></input>
+</form>
+
+	<table border="1" style="text-align: center;">
+		<tr>
+			<td colspan="6"><h3>Cotización</h3></td>
+		</tr>
+		<tr>
+			<td colspan="2"><strong>Proveedro</strong></td>
+			<td colspan="2"><strong>Fecha Cotización</strong></td>
+			<td colspan="2"><strong>Fecha Entrega</strong></td>
+		</tr>
+		<tr>
+			<td colspan="2">{{cotizacion.proveedor}}</td>
+			<td colspan="2">{{cotizacion.fecha_cotizacion}}</td>
+			<td colspan="2">{{cotizacion.fecha_entrega}}</td>
+		</tr>
+
+		<tr>
+			<td colspan="6"><h3>Productos Cotizados</h3></td>
+		</tr>
+		<tr>
+			<td colspan="3"><strong>Descripción</strong></td>
+			<td><strong>Cantidad</strong></td>
+			<td><strong>Precio</strong></td>
+			<td><strong>Total</strong></td>
+		</tr>
+		{%for p in productos%}
+		<tr>
+			<td colspan="3">{{p.producto.descripcion}}</td>
+			<td>{{p.cantidad}}</td>
+			<td>{{p.precio}}</td>
+			<td>{{p.total}}</td>
+		</tr>
+		{%endfor%}
+	</table>
+{%endblock%}

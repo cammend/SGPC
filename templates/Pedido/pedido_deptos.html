@@ -1,0 +1,44 @@
+{%extends 'Deptos/base_depto.html'%}
+
+{%block titulo%}Detalle{%endblock%}
+
+{%block principal%}
+	<h2>Revisar Cotizaciones</h2>
+{%if form_gestion%}
+<form action="/sgpc/depto/pedido/gestionar/" method="post">{%csrf_token%}
+	{{form_gestion}}
+	<input type="hidden" name="id" value="{{pedido.id}}" />
+	<input type="submit" value="Gestionar" />
+</form>
+	{%endif%}
+	
+	<table style="text-align: center;" border="1">
+		<tr><td colspan="6"><h3>Pedido</h3>
+		</td></tr>
+		<tr><td colspan="4"><strong>Justificación</strong></td>
+			<td colspan="2"><strong>Fecha</strong></td>
+		</tr>
+		<tr><td colspan="4">{{pedido.justificacion}}</td>
+			<td colspan="2">{{pedido.fecha}}</td>
+		</tr>
+		<tr><td colspan="6"><h3>Cotizaciones</h3>
+		</td></tr>
+		<tr>
+			<td colspan="4"><strong>Proveedor</strong></td>
+			<td><strong>Fecha Cotización</strong></td>
+			<td><strong>Fecha Entrega</strong></td>
+		</tr>
+
+		{%for c in cotizaciones%}
+		<tr>
+			<td colspan="4">
+			<a href="/sgpc/depto/pedido/gestionar/cotizaciones/{{c.id}}/">{{c.proveedor}}</a>
+			</td>
+			<td>{{c.fecha_cotizacion}}</td>
+			<td>{{c.fecha_entrega}}</td>
+		</tr>
+		{%endfor%}
+
+	</table>
+
+{%endblock%}

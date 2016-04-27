@@ -5,6 +5,7 @@
 {%block principal%}
 
 <h2>Pedidos no publicados</h2>
+{%if object_list%}
 <table border="1">
 <tr>
 	<td><strong>Justificación</strong></td>
@@ -20,5 +21,7 @@
 </tr>
 {%endfor%}
 </table>
-
+{%else%}
+<p>No hay pedidos sin publicar.</p>
+{%endif%}
 {%endblock%}

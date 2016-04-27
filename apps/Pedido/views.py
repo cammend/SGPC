@@ -119,25 +119,47 @@ def guardarRenglon(request, id):
 	return render(request, 'Pedido/asignar_presupuesto.html', ctx)
 
 def guardarCotizacion(request, id):
+#Variables
+	estado = Estado.objects.get(id=4) #Aprobado por gerente
+	pedido = Pedido.objects.get(id=id)
+#Seguridad a nivel de usuario
+	seg_user = SegUser(request, False, True, True)
+	if not seg_user.es_valido(): return seg_user.get_render()
+#Seguridad a nivel del Pedido
+	seg_pedido = SegPedido(request, estado=estado, pedido=pedido)
+	if seg_pedido.pedido is not None:
+		if not seg_pedido.es_valido(): return seg_pedido.get_render()
+#Continuamos... guardando varibles necesarias
 	request.session['url_cot'] = request.path
 	pedido = Pedido.objects.get(id=id)
 	productos = Producto.objects.filter(pedido=pedido)
 	cotizaciones = Cotizacion.objects.filter(pedido=pedido)
+#Comprobando y guardando el form
 	if request.method == 'POST':
 		form = FormCotizacion(request.POST)
 		if form.is_valid():
 			form.save(pedido)
-
 		else:
 			ctx = {'titulo': 'Error', 'titulo_msg': 'Form no válido'}
 			return render(request, 'GestionUser/info.html', ctx)
-
+#Retornando un form vacío
 	form = FormCotizacion()
 	ctx = {'form': form, 'pedido':pedido, 'productos':productos, 'cotizaciones':cotizaciones}
 	ctx['url_back'] = recortar_url(request.path, 5)
 	return render(request, 'Pedido/agregar_cotizacion.html', ctx)
 
 def guardarProductosCotizados(request, id):
+#Variables
+	estado = Estado.objects.get(id=4) #Aprobado por gerente
+	pedido = Cotizacion.objects.get(id=id).pedido
+#Seguridad a nivel de usuario
+	seg_user = SegUser(request, False, True, True)
+	if not seg_user.es_valido(): return seg_user.get_render()
+#Seguridad a nivel del Pedido
+	seg_pedido = SegPedido(request, estado=estado, pedido=pedido)
+	if seg_pedido.pedido is not None:
+		if not seg_pedido.es_valido(): return seg_pedido.get_render()
+#Continuacion... guardamos variables necesarias
 	cotizacion = Cotizacion.objects.get(id=id)
 	pedido = cotizacion.pedido
 	if request.method == 'POST':
@@ -145,20 +167,23 @@ def guardarProductosCotizados(request, id):
 		if form.is_valid():
 			id_cot = request.POST['id_cot']
 			form.save(cotizacion)
-
 		else:
 			ctx = {'titulo': 'Error', 'titulo_msg': 'Form no válido'}
 			return render(request, 'GestionUser/info.html', ctx)
-
+#Guardando variables extras al queryset
 	productos = ProductosCotizados.objects.filter(cotizacion=cotizacion)
 	if productos:
 		productos = productos.annotate( total=ExpressionWrapper( F('cantidad')*F('precio'), output_field=FloatField() ) )
+#Retornamos un form vacío, y mandamos variables al context
 	form = FormProductoCotizado()
 	form.fields['producto'].choices = get_choice_for_cot(cotizacion)
 	ctx = {'form': form, 'pedido':pedido, 'productos':productos, 'cotizacion':cotizacion}
+	ctx['url_editar'] = recortar_url(request.path, 6)
+	ctx['url_eliminar'] = recortar_url(request.path, 6) + 'eliminar/'
 	if 'url_cot' in request.session:
 		ctx['url_back'] = request.session['url_cot']
 	else:
 		ctx = {'titulo':'Error', 'titulo_msg': 'Acceso por url', 'msg':'Has intentado acceder a la página directamente por url.'}
 		return render(request, 'GestionUser/info.html', ctx)
 	return render(request, 'Pedido/pedido_de_cotizacion.html', ctx)
+

@@ -70,6 +70,9 @@ class BasePedidoProductoDetailView(BasePedidoDetailView):
 		pedido = kwargs['object']
 		productos = Producto.objects.filter(pedido=pedido)
 		products = productos.annotate( total=ExpressionWrapper( F('cantidad')*F('precio'), output_field=FloatField() ) )
+		cotizaciones = Cotizacion.objects.filter(pedido=pedido)
+		self.request.session['url_cot_deptos'] = self.request.path
+		context['cotizaciones'] = cotizaciones
 		context['productos'] = products
 		if self.id_estado == 1:
 			context['editar_pedido'] = True
@@ -239,3 +242,260 @@ class BaseProductoCreateView(BaseModeloCreateView):
 		context = super(BaseProductoCreateView, self).get_context_data(**kwargs)
 		context['pedido'] = self.pedido
 		return context
+
+
+"""""
+PRUEBAS
+"""""
+
+#Clase de seguridad a nivel de tipo de usuario
+class SegUser():
+	user_root = False
+	user_admin = False
+	user_normal = False
+	template_render = 'GestionUser/info.html'
+	ctx = {'titulo':'Error', 'titulo_msg':'Página no encontrada'}
+	request = None
+	user = None
+
+	def __init__(self, request, user_root=False, user_admin=False, user_normal=False):
+		self.user_root = user_root
+		self.user_admin = user_admin
+		self.user_normal = user_normal
+		self.request = request
+		self.user = request.user
+
+	def is_root(self, user):
+		return (user.es_root() and self.user_root)
+	def is_admin(self, user):
+		return (user.es_admin() and self.user_admin)
+	def is_normal(self, user):
+		return (user.es_normal() and self.user_normal)
+
+	def es_valido(self):
+		user = self.request.user
+		return ( self.is_root(user) or self.is_admin(user) or self.is_normal(user) )
+
+	def get_render(self):
+		return render(self.request, self.template_render, self.ctx)
+
+#Funciones generales de pedido con (user, depto y estado)
+def pedido_a_user(pedido, user):
+	if pedido and user:
+		if user == pedido.usuario: return True
+	print("pedido a user: False")
+	return False
+def pedido_a_depto(pedido, depto):
+	if pedido and depto:
+		if depto == pedido.usuario.get_depto(): return True
+	print("pedido a depto: False")
+	return False
+def pedido_en_estado(pedido, estado):
+	if pedido and estado:
+		if pedido.estado == estado: return True
+	print("pedido a estado: False")
+	return False
+
+#Clase de seguridad a nivel de pedido
+class SegPedido():
+	estado = None #Seguridad por estado
+	user = None #Seguridad por usuario
+	depto = None #Seguridad por depto
+	pedido = None #Modelo a verificar
+	request = None
+	template_render = 'GestionUser/info.html'
+	ctx = {'titulo':'Error', 'titulo_msg':'Modelo no encontrado'}
+
+	def __init__(self, request, estado=None, user=None, depto=None, pedido=None):
+		self.estado = estado
+		self.user = user
+		self.depto = depto
+		self.pedido = pedido
+		self.request = request
+
+	def a_user(self): #POR USUARIO
+		return pedido_a_user(self.pedido, self.user)
+	def a_depto(self): #POR DEPTO
+		return pedido_a_depto(self.pedido, self.depto)
+	def en_estado(self): #POR ESTADO
+		return pedido_en_estado(self.pedido, self.estado)
+
+	def _get_queryset(self):
+		if self.user:
+			if self.estado:
+				return Pedido.objects.filter(usuario=self.usuario, estado=self.estado)
+			return Pedido.objects.filter(usuario=self.usuario)
+		elif self.depto:
+			users = DeptoUser.objects.filter(depto=self.depto).values('usuario')
+			if self.depto:
+				print(users)#DEBUG
+				return Pedido.objects.filter(usuario=users, estado=self.estado)
+			return Pedido.objects.filter(usuario=users)
+		elif self.estado:
+			return Pedido.objects.filter(estado=self.estado)
+		print("DEBUG SegPedido: Se están retornando todos los pedidos.")
+		return Pedido.objects.all()
+
+	def es_valido(self):
+		if self.pedido is None:
+			print("DEBUG SegPedido: El pedido no debe ser None.")
+		if self.a_user() or self.a_depto() or self.en_estado():
+			return True
+		return False
+
+	def get_render(self):
+		return render(self.request, self.template_render, self.ctx)
+
+
+class BasePedidoProtegido(View):
+	queryset = None
+	#Variables para SegUser
+	user_root = False
+	user_admin = False
+	user_normal = False
+	#Variables para SegPedido
+	estado = None #Seguridad por estado
+	user = None #Seguridad por usuario
+	depto = None #Seguridad por depto
+	pedido = None #Modelo a verificar
+
+
+	def seguridad(self, request):
+		#Seguridad a nivel de usuario
+		seg_user = SegUser(self.request, self.user_root, self.user_admin, self.user_normal)
+		if not seg_user.es_valido(): return seg_user.get_render()
+		#Seguridad a nivel del Pedido
+		seg_pedido = SegPedido(self.request, self.estado, self.user, self.depto, self.pedido)
+		if seg_pedido.pedido is not None:
+			if not seg_pedido.es_valido(): return seg_pedido.get_render()
+		else:
+			self.queryset = seg_pedido._get_queryset()
+		#Si no hubo ningún fallo de seguridad...
+		return False
+
+	def dispatch(self, *args, **kwargs):
+		user = self.request.user
+		#Aplicando la seguridad
+		seguridad = self.seguridad(self.request)
+		if seguridad: return seguridad
+		#Si no hay ningún fallo de seguridad...
+		return super(BasePedidoProtegido, self).dispatch(*args, **kwargs)
+
+
+class ListarTodosLosPedidos(BasePedidoProtegido, ListView):
+	model = Pedido
+	template_name = 'Genericas/list.html'
+	user_admin = True
+	user_normal = True
+	estado = Estado.objects.filter(id=1)
+
+class DetalleDePedido(BasePedidoProtegido, UpdateView):
+	model = Pedido
+	slug_url_kwarg = 'id'
+	slug_field = 'id'
+	template_name = 'Genericas/update.html'
+	user_admin = True
+	user_normal = True
+	estado = Estado.objects.filter(id=1)
+	fields = ['fecha']
+	pedido = None
+
+	def dispatch(self, *args, **kwargs):
+		self.pedido = Pedido.objects.get(id=kwargs['id'])
+		return super(DetalleDePedido, self).dispatch(*args, **kwargs)
+
+class BaseCotizacionProtegida(BasePedidoProtegido):
+	model = Cotizacion
+	slug_url_kwarg = 'id'
+	slug_field = 'id'
+	fields = ['proveedor','fecha_cotizacion','fecha_entrega']
+	#Variables de SegUser
+	user_admin = True
+	user_normal = True
+	#Variables de SegPedido
+	estado = Estado.objects.get(id=4) #Aprobado por gerente
+	depto = None
+	pedido = None
+	success_url = None
+
+	def dispatch(self, *args, **kwargs):
+		self.depto = self.request.user.get_depto()
+		if self.success_url is None:
+			self.success_url = self.request.path + 'pedido/'
+		try:
+			print("DEBUG BCP: ANTES")
+			cotizacion = Cotizacion.objects.get(id=kwargs['id'])
+			print("DEBUG BCP: DESPUES")
+			self.pedido = cotizacion.pedido
+			print(self.pedido)
+		except:
+			self.pedido = None
+		return super(BaseCotizacionProtegida, self).dispatch(*args, **kwargs)
+
+class EditarCotizacion(BaseCotizacionProtegida, UpdateView):
+	template_name = 'Genericas/update.html'
+
+	def dispatch(self, *args, **kwargs):
+		self.success_url = self.request.path + 'pedido/'
+		return super(BaseCotizacionProtegida, self).dispatch(*args, **kwargs)
+
+class EliminarCotizacion(BaseCotizacionProtegida, DeleteView):
+	template_name = 'Genericas/delete.html'
+	success_url = '/sgpc/depto/home/'
+
+class AsignarPrioridadCot(BaseCotizacionProtegida, UpdateView):
+	template_name = 'cotizaciones/actualizar_cotizacion.html'
+	estado = Estado.objects.get(id=5)
+	fields = ['prioridad', 'cancelada']
+	cotizacion = None
+
+	def dispatch(self, *args, **kwargs):
+		self.cotizacion = Cotizacion.objects.get(id=kwargs['id'])
+		self.success_url = self.request.session['url_cot_deptos']
+		return super(AsignarPrioridadCot, self).dispatch(*args, **kwargs)
+
+	def get_context_data(self, **kwargs):
+		context = super(AsignarPrioridadCot, self).get_context_data(**kwargs)
+		context['cotizacion'] = self.cotizacion
+		productos = ProductosCotizados.objects.filter(cotizacion=self.cotizacion)
+		productos = productos.annotate( total=ExpressionWrapper( F('cantidad')*F('precio'), output_field=FloatField() ) )
+		context['productos'] = productos
+		return context
+
+class ListarPedidosParaComprar(BasePedidoProtegido, ListView):
+	template_name = 'Pedido/pedidos_por_comprar.html'
+	estado = Estado.objects.get(id=6)
+	model = Pedido
+	user_admin = True
+	user_normal = True
+
+	def dispatch(self, *args, **kwargs):
+		return super(ListarPedidosParaComprar, self).dispatch(*args, **kwargs)
+
+class DetallePedidoParaComprar(BaseCotizacionProtegida, DetailView):
+	slug_url_kwarg = 'id'
+	slug_field = 'id'
+	template_name = 'Pedido/detalle_pedido_comprar.html'
+	__pedido = None
+	#Variables para SegUser
+	user_admin = True
+	user_normal = True
+	#Variables para SegPedido
+	estado = Estado.objects.get(id=6)
+	model = Pedido
+
+	def get_context_data(self, **kwargs):
+		context = super(DetallePedidoParaComprar, self).get_context_data(**kwargs)
+		cotizaciones = Cotizacion.objects.filter(pedido=self.__pedido).order_by('prioridad')
+		#print("PEDIDO__: "+str(self.pedido))
+		#print("COT: "+str(cotizaciones))
+		context['pedido'] = self.__pedido
+		context['cotizaciones'] = cotizaciones
+		return context
+
+	def dispatch(self, *args, **kwargs):
+		self.__pedido = Pedido.objects.get(id=kwargs['id'])
+		#print("ID: "+str(kwargs['id']))
+		#print("PEDIDO: "+str(self.pedido))
+		#self.success_url = self.request.session['url_cot_deptos']
+		return super(DetallePedidoParaComprar, self).dispatch(*args, **kwargs)
