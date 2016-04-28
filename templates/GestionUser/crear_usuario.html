@@ -5,10 +5,10 @@
 {%block principal%}
 {%if p%}<p>{{p}}</p>{%endif%}
 {%if form%}
-<form method='post'>{% csrf_token %}
+<form class="form_estilo_1"  method='post'>{% csrf_token %}
 	<h2>{{h1}}</h2>
 	{{form.as_p}}
-	<input type='submit' value='Registrar'></input>
+	<input class="boton_estilo_1" type='submit' value='Registrar'></input>
 </form>
 {%endif%}
 {%endblock%}

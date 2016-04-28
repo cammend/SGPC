@@ -3,17 +3,22 @@
 {%block titulo%}Nuevo Departamento{%endblock%}
 
 {%block nav%}
+
+<ol class="menu" class="ol_nav">
 <h2>Gestión</h2>
-<ol class="ol_nav">
 	<li><a href="/sgpc/depto/nuevo/">Nuevo Departamento</a></li>
 </ol>
 {%endblock%}
 
 {%block principal%}
+
+<ol class="contenido" style="margin-left: 40px;">
 <h2>Lista de Departamentos</h2>
-<ol style="margin-left: 40px;">
 {%for d in object_list%}
+
 	<li>{{d}}</li>
+	
 {%endfor%}
 </ol>
+
 {%endblock%}

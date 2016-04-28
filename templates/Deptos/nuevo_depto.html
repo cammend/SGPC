@@ -3,16 +3,18 @@
 {%block titulo%}Nuevo Departamento{%endblock%}
 
 {%block nav%}
-<h2>Gestión</h2>
-<ol class="ol_nav">
+
+<ol class="menu" class="ol_nav">
+	<h2>Gestión</h2>
 	<li><a href="/sgpc/depto/lista/">Ver Departamentos</a></li>
 </ol>
 {%endblock%}
 
 {%block principal%}
-<h2>Nuevo Departamento</h2>
-<form method="post"> {% csrf_token %}
+
+<form class="form_estilo_1" method="post"> {% csrf_token %}
+	<h2 >Nuevo Departamento</h2>
 	{{form.as_p}}
-	<input type="submit" value="Crear" />
+	<input class="boton_estilo_1" type="submit" value="Crear" />
 </form>
 {%endblock%}
