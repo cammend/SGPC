@@ -6,6 +6,10 @@
 <form method="post">{%csrf_token%}
 	<h2>{%if h2%}{{h2}}{%else%}Editar{%endif%}</h2>
 	{{form.as_p}}
+	{%if value_input%}
+	<input type="submit" value="{{value_input}}"></input>
+	{%else%}
 	<input type="submit" value="Guardar Cambios"></input>
+	{%endif%}
 </form>
 {%endblock%}

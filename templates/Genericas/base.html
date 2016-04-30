@@ -1,0 +1,27 @@
+{%extends 'base_2.html'%}
+
+{%block titulo%}{{titulo}}{%endblock%}
+
+{%block nav%}
+<h2>{{request.user.get_depto}}</h2>
+<ul>
+{%if request.user.es_admin%}
+	<li><a href="/sgpc/cuentas/">Ver Usuarios</a></li>
+{%endif%}
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/no_publicado/nuevo/">Nuevo Pedido</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/no_publicado/">Pedidos no Publicados</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/con_cotizaciones_ordenadas/">Pedidos para comprar</a></li>
+	{%if request.user.get_depto.id == 16%}
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/en_almacén/">Retirar pedidos del almacén</a></li>
+	{%endif%}
+	<li><a href="#">Ver seguimiento</a></li>
+</ul>
+{%if reciente%}
+<h2>Actividad Reciente</h2>
+<ul>
+{%for rec in reciente%}
+	<li><a href="{{rec.url}}">{{rec.nombre}}</a></li>
+{%endfor%}
+</ul>
+{%endif%}
+{%endblock%}

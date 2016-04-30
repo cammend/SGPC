@@ -27,6 +27,8 @@ tipos = [(0,'ROOT'),
 		 (2,'NORMAL'),
 ]
 
+def normalizar_url(nombre):
+	return nombre.lower().replace(' ','_').replace('.','')
 
 def getStringTipo(num):
 	return str(tipos[num][1])
@@ -139,10 +141,19 @@ class Usuario(AbstractBaseUser):
 		if self.tipoUser == 0: return None
 		return EstadoDepto.objects.get(depto=self.get_depto()).estado
 
+	def get_estado_url(self):
+		if self.tipoUser == 0: return None
+		return normalizar_url( str(self.get_estado()) )
+
+	def get_depto_url(self):
+		return normalizar_url( str(self.get_depto()) )
+
 	def get_url_home(self):
 		if self.tipoUser == 0:
 			return '/sgpc/root/'
-		return '/sgpc/depto/home/'
+		depto_url = self.get_depto_url()
+		estado_url = self.get_estado_url()
+		return '/sgpc/'+depto_url+'/pedido/'+estado_url+'/gestion/'
 
 class DeptoUser(models.Model):
 	usuario = models.OneToOneField(Usuario)

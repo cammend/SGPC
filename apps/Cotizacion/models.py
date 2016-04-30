@@ -31,4 +31,6 @@ class ProductosCotizados(models.Model):
 		return 'Id Cotización: %i - %s' % (self.cotizacion.id, self.producto)
 
 	def total(self):
+		if not self.cantidad or not self.precio:
+			return 0
 		return self.cantidad * self.precio

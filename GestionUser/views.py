@@ -156,7 +156,7 @@ def entrar(request):
 				request.session['reciente'] = []
 				login(request, user) #logueado en las sesion de django
 				# dependiendo del depto al q pertenece el user así se redirecionará
-				return redirect( get_url_redir(request) )
+				return redirect( user.get_url_home() )
 		else:
 			ctx['form'] = form #guardamos el form con los datos resultantes de la validación
 			return render(request, 'GestionUser/entrar.html', ctx)

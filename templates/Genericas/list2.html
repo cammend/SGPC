@@ -1,4 +1,4 @@
-{%extends 'Deptos/base_depto.html'%}
+{%extends 'Genericas/base.html'%}
 
 {%block titulo%}Gestión de pedidos{%endblock%}
 
@@ -9,22 +9,57 @@
   <h2>Pedido</h2>
   {% for pedido in page_obj %}
     {%if estado == 1%}
-      <a href="{{pedido.id}}">Editar</a>
-      <a href="{{pedido.id}}">Eliminar</a>
+      <a href="{{pedido.id}}/editar_pedido/">Editar</a>
+      <a href="{{pedido.id}}/eliminar_pedido/">Eliminar</a>
+    {%endif%}
+    {%if form_gestion%}
+      <form action="/sgpc/depto/pedido/gestionar/" method="post">{%csrf_token%}
+        {{form_gestion.as_p}}
+        <input type="hidden" name="id" value="{{pedido.id}}" />
+        <input type="submit" value="Gestionar" />
+      </form>
     {%endif%}
     <li><strong>Usuario: </strong>{{ pedido.usuario }}</li>
+    <li><strong>Depto: </strong>{{ pedido.usuario.get_depto }}</li>
     <li><strong>Justificacion: </strong>{{ pedido.justificacion }}</li>
     <li><strong>Fecha: </strong>{{ pedido.fecha }}</li>
+    <li><strong>Estado: </strong>{{ pedido.estado }}</li>
     <h3>Productos</h3>
     {%if estado == 1%}
-      <a href="#">Agregar</a>
+      <a href="{{pedido.id}}/agregar_producto/">Agregar</a>
     {%endif%}
     {% if pedido.producto_set.all%}
       <ol style="margin-left: 30px;">
     		{%for producto in pedido.producto_set.all%}
           <li>
-            <p><strong>Descripción: </strong>{{producto.descripcion}} </br>
-            <strong>Cantidad: </strong>{{producto.cantidad}}</p>
+            {%if estado == 1 %}
+            <a href="{{pedido.id}}/producto/{{producto.id}}/editar/">Editar</a>
+            <a href="{{pedido.id}}/producto/{{producto.id}}/eliminar/">Eliminar</a>
+            {%endif%}
+            <p>
+              <strong>Descripción: </strong>{{producto.descripcion}} </br>
+              <strong>Cantidad: </strong>{{producto.cantidad}} </br>
+              {%if estado = 2%}
+                {%if producto.renglon%}
+                  <strong>Renglón Presupuestario: </strong>{{producto.renglon}}
+                  <a href="editar_renglon/{{producto.id}}/">Editar Renglón</a> </br>
+                {%else%}
+                  <form method="post" action="asignar_renglon/"> {%csrf_token%}
+                    {{form_renglon.as_p}}
+                    <input type="hidden" name="id" value="{{producto.id}}" />
+                    <input type="submit" value="Asignar" />
+                  </form>
+                {%endif%}
+              {% endif %}
+              {%if estado > 2%}
+                <strong>Renglón Presupuestario: </strong>
+                {%if producto.renglon%}
+                  {{producto.renglon}}
+                {%else%}
+                  No asignado
+                {%endif%}
+              {%endif%}
+            </p>
           </li>
     		{%endfor%}
     	</ol>
@@ -33,32 +68,64 @@
       <h3>Cotizaciones</h3>
     {% endif%}
     {%if estado == 4%}
-      <a href="#">Agregar</a>
+      <a href="agregar_cotizacion/{{pedido.id}}/">Agregar</a>
     {%endif%}
     {% if pedido.cotizacion_set.all %}
       <ol style="margin-left: 30px;">
         {%for cotizacion in pedido.cotizacion_set.all%}
-          <li>
+          <li{%if not cotizacion.aprobada and estado == 7%}
+            style="display: none;" 
+          {%endif%}>
           {%if estado == 4%}
-            <a href="{{cotizacion.id}}">Editar</a><a href="{{cotizacion.id}}">Eliminar</a>
-          {%elif estado == 5%}
-            <a href="{{cotizacion.id}}">Asignar Prioridad</a>
+            <a href="editar_cotizacion/{{cotizacion.id}}/">Editar</a>
+            <a href="eliminar_cotizacion/{{cotizacion.id}}/">Eliminar</a>
+          {%elif estado == 5 and not cotizacion.prioridad%}
+            <a href="asignar_prioridad/{{cotizacion.id}}/">Asignar Prioridad</a>
+          {%else%}
+            <strong>Prioridad: </strong> {{cotizacion.prioridad}}
+            {%if estado == 5%}
+              <a href="asignar_prioridad/{{cotizacion.id}}/">Editar Prioridad</a>
+            {%endif%}
+            {%if estado == 6 and not cotizacion.aprobada%}
+              <a href="{{pedido.id}}/seleccionar/{{cotizacion.id}}/">Seleccionar para compra.</a>
+            {%endif%}
+            {%if cotizacion.aprobada%}
+              --> Cotización Elegida para la compra
+            {%endif%}
           {%endif%}
             <p><strong>Proveedor: </strong>{{cotizacion.proveedor}} </br>
             <strong>Fecha Cotización: </strong>{{cotizacion.fecha_cotizacion}} </br>
             <strong>Fecha Entrega: </strong>{{cotizacion.fecha_entrega}}</p>
           </li>
           <ol style="margin-left: 60px;">
-            <h3>Productos Cotizados</h3>
-            {%for producto in cotizacion.productoscotizados_set.all%}
-              <li>
-              {%if estado == 4%}
-                <a href="{{producto.id}}">Editar</a><a href="{{producto.id}}">Eliminar</a>
+            <h3{%if not cotizacion.aprobada and estado == 7%}
+                style="display: none;" 
+              {%endif%}>Productos Cotizados</h3>
+            {%for pc in cotizacion.productoscotizados_set.all%}
+              <li {%if not pc.precio and estado > 4%}
+                style="display: block;"
               {%endif%}
-                <p><strong>Producto: </strong>{{producto.producto}} </br>
-                <strong>Cantidad: </strong>{{producto.cantidad}} </br>
-                <strong>Precio: </strong>{{producto.precio}} </br>
-                <strong>Total: </strong>{{producto.total}}</p>
+              {%if not cotizacion.aprobada and estado == 7%}
+                style="display: none;" 
+              {%endif%}>
+                <p>
+                  {%if pc.precio%}
+                    <strong>Producto: </strong> {{pc.producto.descripcion}} </br>
+                    <strong>Cantidad: </strong> {{pc.cantidad}} </br>
+                    <strong>Precio: </strong> {{pc.precio}} </br>
+                    <strong>Total: </strong> {{pc.total}} </br>
+                  {%else%}
+                    {%if form_cotizar and estado = 4%}
+                      <strong>Producto: </strong> {{pc.producto.descripcion}} </br>
+                      <form method="post" action="cotizar_producto/">{%csrf_token%}
+                        {{form_cotizar.as_p}}
+                        <input type="hidden" name="id_producto" value="{{pc.producto.id}}" />
+                        <input type="hidden" name="id_cotizacion" value="{{cotizacion.id}}" />
+                        <input type="submit" value="Cotizar" />
+                      </form>
+                    {%endif%}
+                  {%endif%}
+                </p>
               </li>
             {%endfor%}
           </ol>

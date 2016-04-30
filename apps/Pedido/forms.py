@@ -44,3 +44,11 @@ class FormAsignaRenglon(forms.ModelForm):
 	class Meta:
 		model = Producto
 		fields = ['renglon']
+
+
+#Éste es usado en apps.Depto.views
+class FormRenglon(forms.ModelForm):
+
+	class Meta:
+		model = Producto
+		fields = ['renglon']
