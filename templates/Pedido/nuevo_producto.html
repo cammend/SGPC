@@ -3,12 +3,12 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block principal%}
-	<form method="post">{%csrf_token%}
+	<form class="form_estilo_1" method="post">{%csrf_token%}
 	<h2 style="display: inline-block;">Agregar Producto</h2>
 	{%if ok%}<p>{{ok}}</p>{%endif%}
-	<p><strong>Al pedido: </strong>{{pedido}}</p>
+	<p style="display: block;"><strong>Al pedido: </strong>{{pedido}}</p>
 	{{form.as_p}}
-	<input type="submit" value="Agregar"></input>
+	<input class="boton_estilo_1" type="submit" value="Agregar"></input>
 	</form>
 	
 {%endblock%}
