@@ -3,9 +3,9 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block principal%}
-	<form method="post">{%csrf_token%}
+	<form class="form_estilo_1" method="post">{%csrf_token%}
 	<h2>Nuevo Pedido</h2>
 	{{form.as_p}}
-	<input type="submit" value="Crear"></input>
+	<input class="boton_estilo_1" type="submit" value="Crear"></input>
 	</form>
 {%endblock%}
