@@ -3,7 +3,7 @@
 {%block titulo%}Nuevo{%endblock%}
 
 {%block principal%}
-<form method="post">{%csrf_token%}
+<form method="post" class="form_estilo_1 ancho-var">{%csrf_token%}
 	<h2>{%if h2%}{{h2}}{%else%}Crear{%endif%}</h2>
 	{{form.as_p}}
 	{%if value_input%}

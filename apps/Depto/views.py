@@ -191,6 +191,7 @@ class BaseSGPC(View):
 		estado_url = get_estado( str(self.kwargs['estado']) )
 		if user.get_depto() == depto and estado_url == estado_en_almacen:
 			self.estado_gestion_user = estado_en_almacen
+			self.filtrar_por_mi_depto = False
 		else:
 			self.estado_gestion_user = user.get_estado()
 
@@ -277,7 +278,7 @@ class CrearPedido(Crear):
 		return context
 
 #Clase para editar los pedidos "No Publicados"
-class EditarPedido(BaseSGPC, UpdateView):
+class EditarPedido(Actualizar):
 	model = Pedido
 	fields = ['justificacion', 'fecha']
 	modelo_no_publicado = True
@@ -292,7 +293,7 @@ class EditarPedido(BaseSGPC, UpdateView):
 		context['value_input'] = 'Guardar Cambios'
 		return context
 
-class EliminarPedido(BaseSGPC, DeleteView):
+class EliminarPedido(Eliminar):
 	slug_url_kwarg = 'key'
 	slug_field = 'id'
 	template_name = 'Genericas/delete.html'
@@ -356,7 +357,7 @@ class EditarRenglon(EditarProducto):
 		return context
 
 #Clase q elimina un producto correspondiente a un pedido
-class EliminarProducto(BaseSGPC, DeleteView):
+class EliminarProducto(Eliminar):
 	slug_url_kwarg = 'id'
 	slug_field = 'id'
 	modelo = Producto

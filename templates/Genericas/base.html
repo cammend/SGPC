@@ -3,8 +3,8 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block nav%}
-<h2>{{request.user.get_depto}}</h2>
-<ul>
+<h2 class="contenido">{{request.user.get_depto}}</h2>
+<ul class="menu contenido">
 {%if request.user.es_admin%}
 	<li><a href="/sgpc/cuentas/">Ver Usuarios</a></li>
 {%endif%}
