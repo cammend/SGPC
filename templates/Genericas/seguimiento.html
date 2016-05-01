@@ -1,0 +1,9 @@
+{%extends 'Genericas/base.html'%}
+
+{%block titulo%}Seguimiento{%endblock%}
+
+{%block principal%}
+  {%for p in pedidos%}
+  	{{p}}
+  {%endfor%}
+{%endblock%}

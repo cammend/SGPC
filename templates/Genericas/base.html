@@ -14,7 +14,7 @@
 	{%if request.user.get_depto.id == 16%}
 	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/en_almacén/">Retirar pedidos del almacén</a></li>
 	{%endif%}
-	<li><a href="#">Ver seguimiento</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/ver_seguimiento/">Ver seguimiento</a></li>
 </ul>
 {%if reciente%}
 <h2>Actividad Reciente</h2>

@@ -8,10 +8,23 @@ from apps.Estado.models import Estado, EstadoDepto
 from GestionUser.models import DeptoUser, normalizar_url
 from apps.Cotizacion.models import Cotizacion, ProductosCotizados
 from apps.Transicion.forms import FormGestionar, choice_actual, choice_siguiente
+from apps.Transicion.models import *
 from apps.Pedido.forms import FormRenglon
 from apps.Cotizacion.forms import FormProductoCotizado
 
 # Create your views here.
+
+ps = [
+	"El pedido sólo se puede publicar si tiene por lo menos un producto asignado",
+	"El pedido se puede gestionar sólo si se le asignó el renglón presupuestario a cada producto del pedido.",
+	"El pedido se puede aceptar o cancelar.",
+	"El pedido se puede gestionar si por lo menos tiene una cotización asignada.",
+	"El pedido se puede gestionar hasta que cada cotización tenga una prioridad asignada.",
+	"El pedido se puede gestionar hasta que se elija una cotización para la compra.",
+	"El pedido está listo para ser comprado.",
+	"El pedido está comprado y en proceso de llegar al almacén.",
+	"El pedido se puede retirar del almacén por la unidad interesada.",
+]
 
 def get_depto(nombre_url):
 	deptos = Departamento.objects.all()
@@ -36,6 +49,83 @@ def url_back(url, num):
 	for x in range(1,tam-num):
 		new += aux[x]+'/'
 	return new
+
+#devuelve el form si el estado se puede gestionar o si no se puede gestionar se devuelve None.
+def get_form_gestion(id_estado, pedido):
+	form = FormGestionar()
+	form.fields['est_act'].queryset = choice_actual(pedido)
+	form.fields['est_sig'].queryset = choice_siguiente(pedido)
+	p_prods = pedido.producto_set.all()
+	p_cots = pedido.cotizacion_set.all()
+	if id_estado == 1: #No Publicado
+		if p_prods:
+			return form
+	elif id_estado == 2: #Publicado
+		for p in p_prods:
+			if not p.renglon: return None
+		return form
+	elif id_estado == 3: #Con Presupuesto asignado
+		return form
+	elif id_estado == 4: #Aprobado por gerencia
+		if not p_cots: return None
+		for c in p_cots:
+			prods = c.productoscotizados_set.all()
+			for p in prods:
+				if not p.precio: return None
+			return form
+	elif id_estado == 5: #Cotizado
+		for c in p_cots:
+			if not c.prioridad: return None
+		return form
+	elif id_estado == 6: #Con cotización ordenada
+		for c in p_cots:
+			if c.aprobada: return form
+		return None
+	elif id_estado in [7,8,9]: #Con cotización elegida, en almacén y retirado de almacén.
+		return form
+	return None
+
+
+
+#Método para obtener un párrafo (p) y un formulario de gestión (form), para cuando se lista
+#un pedido.
+def get_p_y_form(nombre_estado, pedido):
+	estado = get_estado(nombre_estado)
+	estados = Estado.objects.all()
+	for e in estados:
+		if e == estado:
+			return ps[e.id-1], get_form_gestion(e.id, pedido)
+
+def gestionarPedido(request):
+	user = request.user
+	id = request.POST['id']
+	#Obtenemos las variables
+	if request.method == 'POST':
+		sig = request.POST['est_sig']
+		if sig:
+			pedido = Pedido.objects.get(id=id)
+			est_act = Estado.objects.get(id=request.POST['est_act'])
+			est_sig = Estado.objects.get(id=request.POST['est_sig'])
+			transicion = Transicion.objects.get(estadoActual=est_act, estadoSiguiente=est_sig)
+			#guardamos el historial
+			historial = HistorialTransicion()
+			historial.pedido = pedido
+			historial.usuario = user
+			historial.transicion = transicion
+			historial.save()
+			#cambiamos de estado al pedido
+			Pedido.objects.filter(id=id).update(estado=est_sig)
+
+			ctx = {'titulo':'Pedido Gestionado', 'titulo_msg': 'Pedido gestionado exitosamente.'}
+			ctx['url_redir'] = user.get_url_home()
+			return render(request, 'GestionUser/info.html', ctx)
+		else:
+			ctx = {'titulo':'Error', 'titulo_msg':'Formulario no válido', 'msg':'Debe seleccionar una opción.'}
+			ctx['url_redir'] = request.session['pedido_page']
+			return render(request, 'GestionUser/info.html', ctx)
+
+	ctx = {'titulo':'Error', 'titulo_msg':'No hay datos', 'url_redir':user.get_url_home()}
+	return render(request, 'GestionUser/info.html', ctx)
 
 class BaseSGPC(View):
 	slug_url_kwarg = 'key'
@@ -230,10 +320,10 @@ class Listar(BaseSGPC, ListView):
 		context = super(Listar, self).get_context_data(**kwargs)
 		print("LPG: objects_list: " +str(self.object_list))
 		if self.object_list:
-			form = FormGestionar()
-			form.fields['est_act'].queryset = choice_actual(self.object_list[0])
-			form.fields['est_sig'].queryset = choice_siguiente(self.object_list[0])
+			p, form = get_p_y_form(self.kwargs['estado'], self.object_list[0])
 			context['form_gestion'] = form
+			context['parrafo'] = p
+			context['h2'] = 'Pedido "'+ get_estado(self.kwargs['estado']).nombre +'"'
 			context['form_renglon'] = FormRenglon()
 			context['form_cotizar'] = FormProductoCotizado()
 		return context
@@ -481,3 +571,11 @@ def seleccionarCotizacion(request, depto, estado, key, id):
 	Cotizacion.objects.filter(id=id).update(aprobada=True)
 
 	return redirect( request.session['pedido_page'] )
+
+def verSeguimiento(request, depto):
+	depto = get_depto(depto)
+	users = DeptoUser.objects.filter(depto=depto).values('usuario')
+	pedidos = Pedido.objects.filter(usuario=users)
+	ctx = {'pedidos':pedidos}
+
+	return render(request, 'Genericas/seguimiento.html', ctx)

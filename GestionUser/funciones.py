@@ -63,9 +63,9 @@ def get_url_redir(request):
 
 	if user.tipoUser == ROOT:
 		if n: return n
-		else: return URL_FOR_ROOT
+		else: return request.user.get_url_home()
 	if n: return n
-	else: return URL_FOR_ADMIN
+	else: return request.user.get_url_home()
 
 
 #obtener un Depto por un id

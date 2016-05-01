@@ -119,7 +119,7 @@ def index(request):
 	user = request.user
 	ctx = {}
 	if user.es_normal():
-		return redirect('/sgpc/depto/home/')
+		return redirect(user.get_url_home())
 	elif user.es_admin():
 		#Obtener todos los usuarios Normales registrado por éste usuario ADMIN
 		d_u = get_all_user_by_depto(request.user)

@@ -3,13 +3,16 @@ from .views import (
 	ListarDeptoEstado, ListarPedidosGestion, EditarPedido, EliminarPedido, CrearPedido,
 	EditarProducto, CrearProducto, EliminarProducto, asignarRenglon, EditarRenglon,
 	CrearCotizacion, EditarCotizacion, EliminarCotizacion,
-	cotizarProducto, AsignarPrioridad, seleccionarCotizacion,
+	cotizarProducto, AsignarPrioridad, seleccionarCotizacion, gestionarPedido,
+	verSeguimiento,
 )
 
 urlpatterns = patterns('',
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/$', ListarDeptoEstado.as_view()),
 
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/gestion/$', ListarPedidosGestion.as_view()),
+	url(r'^gestionar_pedido/$', gestionarPedido),
+	url(r'^(?P<depto>[-\w]+)/ver_seguimiento/$', verSeguimiento),
 
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/gestion/asignar_renglon/$', asignarRenglon),
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/gestion/editar_renglon/(?P<id>[-\w]+)/$', EditarRenglon.as_view()),

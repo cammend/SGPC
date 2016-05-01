@@ -15,14 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from GestionUser.views import entrar
+from GestionUser.views import entrar, index
 
 urlpatterns = [
     url(r'^$', entrar),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^sgpc/cuentas/',include('GestionUser.urls')),
-    url(r'^sgpc/depto/',include('apps.Deptos.urls')),
     url(r'^sgpc/root/',include('apps.Root.urls')),
-    url(r'^sgpc/depto/cotizacion/',include('apps.Cotizacion.urls')),
     url(r'^sgpc/',include('apps.Depto.urls')),
 ]
