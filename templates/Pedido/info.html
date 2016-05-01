@@ -1,9 +1,0 @@
-{%extends 'Deptos/base_depto.html'%}
-
-{%block titulo%}{{titulo}}{%endblock%}
-
-{%block principal%}
-<h2>{{titulo_msg}}</h2>
-<p>{{msg}} pulse <a href="{{url_redir}}">aquí</a></p>
-<p><a href="{{request.user.get_url_home}}">Home</a></p>
-{%endblock%}
