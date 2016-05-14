@@ -3,8 +3,13 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block nav%}
-<h2 class="contenido">{{request.user.get_depto}}</h2>
-<ul class="menu contenido">
+<h2 >{{request.user.get_depto}}</h2>
+<header>
+<div class="menu_bar">
+ 	<a  class="bt-menu"><span class="icon-menu-list"></span>Menu</a>
+</div>
+<nav>
+<ul >
 {%if request.user.es_admin%}
 	<li><a href="/sgpc/cuentas/">Ver Usuarios</a></li>
 {%endif%}
@@ -19,6 +24,8 @@
 	<li><a href="/sgpc/{{user.get_depto_url}}/informes/">Informes</a></li>
 	{%endif%}
 </ul>
+</nav>
+</header>
 {%if reciente%}
 <h2>Actividad Reciente</h2>
 <ul>
