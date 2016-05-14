@@ -11,6 +11,7 @@ from apps.Transicion.forms import FormGestionar, choice_actual, choice_siguiente
 from apps.Transicion.models import *
 from apps.Pedido.forms import FormRenglon
 from apps.Cotizacion.forms import FormProductoCotizado
+from django.db.models import Q
 
 # Create your views here.
 
@@ -575,7 +576,35 @@ def seleccionarCotizacion(request, depto, estado, key, id):
 def verSeguimiento(request, depto):
 	depto = get_depto(depto)
 	users = DeptoUser.objects.filter(depto=depto).values('usuario')
-	pedidos = Pedido.objects.filter(usuario=users)
-	ctx = {'pedidos':pedidos}
+	pedidos = Pedido.objects.filter()
+	pes = []
+	if request.method == 'POST':
+		buscar = request.POST['busqueda'].split(' ')
+		print(buscar)
+		for b in buscar:
+			pedidos = Pedido.objects.filter()
+			for p in pedidos:
+				pes.append(p)
+	ctx = {'object_list':pes}
 
-	return render(request, 'Genericas/seguimiento.html', ctx)
+	return render(request, 'Genericas/list.html', ctx)
+
+class VerSeguimiento(Listar):
+	template_name = 'Genericas/list.html'
+
+	def get_queryset(self):
+		b = self.request.POST['busqueda'].split(' ')
+		for s in b:
+			Pedido.objects.filter(justificacion=s)
+
+def ListaInforme(request, depto):
+	lista = Pedido.objects.all()
+	ctx = {}
+	ctx['object_list'] = lista
+	return render(request, 'Genericas/list.html', ctx)
+
+def DetalleInforme(request, depto, id):
+	pedido = Pedido.objects.get(id=id)
+	historial = HistorialTransicion.objects.filter(pedido=pedido)
+	ctx = {'historial':historial, 'pedido': pedido}
+	return render(request, 'Genericas/informe.html', ctx)

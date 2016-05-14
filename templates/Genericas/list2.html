@@ -29,7 +29,7 @@
     <li><strong>Justificacion: </strong>{{ pedido.justificacion }}</li>
     <li><strong>Fecha: </strong>{{ pedido.fecha }}</li>
     <li><strong>Estado: </strong>{{ pedido.estado }}</li>
-    <h3 id="titulo_productos">Productos</h3>
+    <h3 id="titulo_productos" style="margin-top: 15px;">Productos</h3>
     {%if estado == 1%}
       <div id="agregar_producto">
         <a href="{{pedido.id}}/agregar_producto/">Agregar</a>
@@ -74,7 +74,7 @@
     	</ol>
     {%endif%}
     {% if estado > 3 %}
-      <h3 id="titulo_cotizacion">Cotizaciones</h3>
+      <h3 id="titulo_cotizacion" style="margin-top: 15px;">Cotizaciones</h3>
     {% endif%}
     {%if estado == 4%}
       <div id="agregar_cotizacion">
@@ -118,7 +118,7 @@
             <strong>Fecha Cotización: </strong>{{cotizacion.fecha_cotizacion}} </br>
             <strong>Fecha Entrega: </strong>{{cotizacion.fecha_entrega}}</p>
           </li>
-          <ol id="l_prods_cotizados" style="margin-left: 60px;">
+          <ol id="l_prods_cotizados" style="margin-left: 60px; margin-top: 15px;">
             <h3 id="titulo_prods_cotizados" {%if not cotizacion.aprobada and estado == 7%}
                 style="display: none;" 
               {%endif%}>Productos Cotizados</h3>
@@ -156,7 +156,7 @@
   {% endfor %}
 </ul>
 
-<div class="pagination">
+<div class="pagination" style="margin-top: 30px;">
     <span class="step-links">
         {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>

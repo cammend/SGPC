@@ -1,0 +1,16 @@
+{%extends 'Genericas/base.html'%}
+
+{%block titulo%}Lista{%endblock%}
+
+{%block principal%}
+<h2>{%if h2%}{{h2}}{%else%}Historial{%endif%}</h2>
+{%if pedido%}
+	<p><strong>Pedido: </strong>{{pedido}}</p>
+	{%for h in historial%}
+		<br>
+		<p><strong>Estado: </strong>{{h.transicion.estadoActual}}</p>
+		<p><strong>Usuario: </strong>{{h.usuario}}</p>
+		<p><strong>Fecha: </strong>{{h.fecha}}</p>
+	{%endfor%}
+{%endif%}
+{%endblock%}

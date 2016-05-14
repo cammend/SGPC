@@ -65,13 +65,11 @@ text-decoration: underline;
 
 /*ESTILO FORMULARIO*/
 .form_estilo_1{
-	width: 45%;
 	text-align: center;
 	border: 1px solid #00999d;;
 	border-radius: 1px;
 	margin: 0 auto;
 	margin-top: 10px;
-
 }
 .form_estilo_1 h2{
 	width: 100%;
@@ -79,30 +77,22 @@ text-decoration: underline;
 	color: white;
 	padding: 10px 0;
 	margin-bottom: 15px;
-
-
-
 }
 .form_estilo_1 p{
 	color: #007789;
 	display: block;
 	margin: 0 auto;
 	padding: 0 15px;
-	
-
 }
 .form_estilo_1 p *{
 	box-sizing: border-box;
 	display: block;
 	margin: 0 auto;
-	width: 50%;
+	width: 95%;
 	padding: 1px;
-
 }
 .form_estilo_1 p input,select{
 	margin-bottom: 15px;
-
-
 }
 /*FIN DE UN ESTILO FORMULARIO*/
 

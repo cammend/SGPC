@@ -5,6 +5,7 @@ from .views import (
 	CrearCotizacion, EditarCotizacion, EliminarCotizacion,
 	cotizarProducto, AsignarPrioridad, seleccionarCotizacion, gestionarPedido,
 	verSeguimiento,
+	ListaInforme, DetalleInforme,
 )
 
 urlpatterns = patterns('',
@@ -12,7 +13,7 @@ urlpatterns = patterns('',
 
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/gestion/$', ListarPedidosGestion.as_view()),
 	url(r'^gestionar_pedido/$', gestionarPedido),
-	url(r'^(?P<depto>[-\w]+)/ver_seguimiento/$', verSeguimiento),
+	url(r'^(?P<depto>[-\w]+)/buscar/$', verSeguimiento),
 
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/gestion/asignar_renglon/$', asignarRenglon),
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/gestion/editar_renglon/(?P<id>[-\w]+)/$', EditarRenglon.as_view()),
@@ -35,5 +36,8 @@ urlpatterns = patterns('',
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/(?P<key>[-\w]+)/agregar_producto/$', CrearProducto.as_view()),
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/(?P<key>[-\w]+)/producto/(?P<id>[-\w]+)/editar/$', EditarProducto.as_view()),	
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/(?P<key>[-\w]+)/producto/(?P<id>[-\w]+)/eliminar/$', EliminarProducto.as_view()),
+
+	url(r'^(?P<depto>[-\w]+)/informes/$', ListaInforme),
+	url(r'^(?P<depto>[-\w]+)/informes/(?P<id>[-\w]+)/$', DetalleInforme),
 
 )

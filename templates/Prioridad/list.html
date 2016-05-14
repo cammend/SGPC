@@ -1,4 +1,4 @@
-{%extends 'Genericas/base.html'%}
+{%extends 'Prioridad/base_prioridad.html'%}
 
 {%block titulo%}Lista{%endblock%}
 
@@ -6,7 +6,7 @@
 <h2>{%if h2%}{{h2}}{%else%}Lista{%endif%}</h2>
 <ul>
 {%for l in object_list%}
-	<li><a href="/sgpc/{{request.user.get_depto_url}}/informes/{{l.id}}/">{{l}}</a></li>
+	<li><a href="/sgpc/root/prioridad/{{l.id}}/">{{l}}</a></li>
 {%endfor%}
 </ul>
 {%endblock%}

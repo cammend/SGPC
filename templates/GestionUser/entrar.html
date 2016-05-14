@@ -4,7 +4,7 @@
 
 {%block body%}
 <div class="fila una-celda">
-	<form method="post" class="form_estilo_1 ancho1 ancho-var"> {%csrf_token%}
+	<form method="post" class="form_estilo_1 ancho-var"> {%csrf_token%}
 		<h2>Iniciar Sesión</h2>
 		{{form.as_p}}
 	{%if next%}<input type="hidden" name="next" value="{{next}}"></input>{%endif%}

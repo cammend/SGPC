@@ -1,0 +1,15 @@
+{%extends 'Root/base_depto.html'%}
+
+{%block titulo%}Nuevo{%endblock%}
+
+{%block principal%}
+<form method="post" class="form_estilo_1 ancho-var">{%csrf_token%}
+	<h2>{%if h2%}{{h2}}{%else%}Crear{%endif%}</h2>
+	{{form.as_p}}
+	{%if value_input%}
+	<input type="submit" value="{{value_input}}"></input>
+	{%else%}
+	<input type="submit" value="Crear"></input>
+	{%endif%}
+</form>
+{%endblock%}

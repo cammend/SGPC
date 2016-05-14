@@ -15,6 +15,9 @@
 	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/en_almacén/">Retirar pedidos del almacén</a></li>
 	{%endif%}
 	<li><a href="/sgpc/{{user.get_depto_url}}/ver_seguimiento/">Ver seguimiento</a></li>
+	{%if request.user.get_depto.id == 12%}
+	<li><a href="/sgpc/{{user.get_depto_url}}/informes/">Informes</a></li>
+	{%endif%}
 </ul>
 {%if reciente%}
 <h2>Actividad Reciente</h2>
@@ -24,4 +27,10 @@
 {%endfor%}
 </ul>
 {%endif%}
+
+<!-- <form method="post" action="/sgpc/{{request.user.get_depto_url}}/buscar/" >{%csrf_token%}
+	<input type="text" name="busqueda" placeholder="Buscar" required />
+	<input type="submit" value="Buscar" />
+</form> -->
+
 {%endblock%}
