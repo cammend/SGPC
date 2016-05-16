@@ -3,10 +3,12 @@
 {%block titulo%}Lista{%endblock%}
 
 {%block principal%}
-<h2>{%if h2%}{{h2}}{%else%}Lista{%endif%}</h2>
-<ul>
-{%for l in object_list%}
-	<li><a href="/sgpc/{{request.user.get_depto_url}}/informes/{{l.id}}/">{{l}}</a></li>
-{%endfor%}
-</ul>
+<section class="seccion_lista">
+	<h2>{%if h2%}{{h2}}{%else%}Lista{%endif%}</h2>
+	<ul>
+	{%for l in object_list%}
+		<li><a href="/sgpc/{{request.user.get_depto_url}}/informes/{{l.id}}/">{{l}}</a></li>
+	{%endfor%}
+	</ul>
+</section>
 {%endblock%}

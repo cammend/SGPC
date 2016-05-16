@@ -12,6 +12,8 @@ from apps.Transicion.models import *
 from apps.Pedido.forms import FormRenglon
 from apps.Cotizacion.forms import FormProductoCotizado
 from django.db.models import Q
+from apps.Comentarios.forms import FormComentarioPedido, FormComentarioCot
+from apps.Comentarios.models import Observacion
 
 # Create your views here.
 
@@ -60,6 +62,7 @@ def get_form_gestion(id_estado, pedido):
 	p_cots = pedido.cotizacion_set.all()
 	if id_estado == 1: #No Publicado
 		if p_prods:
+			print(p_prods)
 			return form
 	elif id_estado == 2: #Publicado
 		for p in p_prods:
@@ -164,15 +167,15 @@ class BaseSGPC(View):
 	def __es_no_publicado(self): return self.estado == self.estado_modelo
 
 #comprueba si el nombre del depto pasado por url existe.
-	def __comprobar_depto_url(self, depto_url):
+	def __comprobar_depto_url(self):
 		if self.comprobar_depto_url:
-			self.depto = get_depto(depto_url)
+			self.depto = get_depto(self.kwargs['depto'])
 			if not self.depto: 
 				if not self.error: self.error = 'El departamento no existe.'
 #comprueba que el nombre del estado pasado por url existe
-	def __comprobar_estado_url(self, estado_url):
+	def __comprobar_estado_url(self):
 		if self.comprobar_estado_url:
-			self.estado = get_estado(estado_url)
+			self.estado = get_estado(self.kwargs['estado'])
 			if not self.estado:
 				if not self.error: self.error = 'El estado no existe.'
 #comprueba que el depto pasado por url sea el depto al q pertenezco.
@@ -219,8 +222,8 @@ class BaseSGPC(View):
 				if not self.error: self.error = 'El estado debe ser "'+str(self.estado_url)+'".'
 
 	def __seg(self, user, estado_model):
-		self.__comprobar_depto_url(self.kwargs['depto'])
-		self.__comprobar_estado_url(self.kwargs['estado'])
+		self.__comprobar_depto_url()
+		self.__comprobar_estado_url()
 		self.__comprobar_si_el_depto_url_es_mi_depto(user)
 		self.__comprobar_estado_url_igual_a_estado_model(estado_model)
 		self.__comprobar_que_el_estado_url_sea_de_gestion(self.estado_gestion_user)
@@ -279,7 +282,11 @@ class BaseSGPC(View):
 	def solo_para_almacen(self, user):
 		depto = Departamento.objects.get(id=16) #almacen
 		estado_en_almacen = Estado.objects.get(id=9) #en_almacén
-		estado_url = get_estado( str(self.kwargs['estado']) )
+		estado_url = None
+		try:
+			estado_url = get_estado( str(self.kwargs['estado']) )
+		except:
+			pass
 		if user.get_depto() == depto and estado_url == estado_en_almacen:
 			self.estado_gestion_user = estado_en_almacen
 			self.filtrar_por_mi_depto = False
@@ -320,13 +327,23 @@ class Listar(BaseSGPC, ListView):
 	def get_context_data(self, **kwargs):
 		context = super(Listar, self).get_context_data(**kwargs)
 		print("LPG: objects_list: " +str(self.object_list))
+		pedido = None
 		if self.object_list:
-			p, form = get_p_y_form(self.kwargs['estado'], self.object_list[0])
+			try:
+				num = int(self.request.GET['page'])
+				pedido = self.object_list[num-1]
+			except:
+				pedido = self.object_list[0]
+			p, form = get_p_y_form(self.kwargs['estado'], pedido)
 			context['form_gestion'] = form
+			context['id_pedido'] = pedido.id
 			context['parrafo'] = p
 			context['h2'] = 'Pedido "'+ get_estado(self.kwargs['estado']).nombre +'"'
 			context['form_renglon'] = FormRenglon()
 			context['form_cotizar'] = FormProductoCotizado()
+			context['coments_pedido'] = Observacion.objects.filter(pedido=pedido)
+			context['form_cot'] = FormComentarioCot()
+			context['form_pedido'] = FormComentarioPedido()
 		return context
 
 class Actualizar(BaseSGPC, UpdateView):
@@ -608,3 +625,18 @@ def DetalleInforme(request, depto, id):
 	historial = HistorialTransicion.objects.filter(pedido=pedido)
 	ctx = {'historial':historial, 'pedido': pedido}
 	return render(request, 'Genericas/informe.html', ctx)
+
+class ListarPedidoSeguimiento(BaseSGPC, ListView):
+	template_name = 'Genericas/list.html'
+	comprobar_estado_url = False
+	filtrar_por_estado_url = False
+
+	def get_queryset(self):
+		depto = self.request.user.get_depto()
+		users = DeptoUser.objects.filter(depto=depto).values('usuario')
+		return Pedido.objects.filter(usuario=users)
+
+	def get_context_data(self, **kwargs):
+		context = super(ListarPedidoSeguimiento, self).get_context_data(**kwargs)
+		context['h2'] = 'Pedidos en mi Departamento'
+		return context

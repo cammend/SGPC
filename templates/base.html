@@ -9,22 +9,30 @@
 	<link rel="stylesheet" type="text/css" href="/static/css/base.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/base2.css">
 	<link rel="stylesheet" type="text/css" href="/static/css/fonts.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/css/calendar-blue.css">
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    
-	
+	<script type="text/javascript" src="/static/js/calendar.js"></script>
+    <script type="text/javascript" src="/static/js/calendar-es.js"></script>
+    <script type="text/javascript" src="/static/js/calendar-setup.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-2.2.3.min.js"></script>
+	<script type="text/javascript" src="/static/js/menu.js"></script>	
+    <script type="text/javascript">
+		window.onload = function() {
+			$('form p').append('<img src="/static/img/calendar.gif" id="selector" />')
+		  Calendar.setup({
+		    inputField: "id_fecha",
+		    ifFormat:   "%d/%m/%Y",
+		    button:     "selector"
+		  });
+		}
+	</script>
 	{%block encabezado%}{%endblock%}
 </head>
 <body>
 
-<script type="text/javascript" src="/static/js/jquery-2.2.3.min.js"></script>
-<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-<script type="text/javascript" src="/static/js/menu.js"></script>
-<script type="text/javascript" src="/static/js/inserta_icono.js"></script>
-
 <div id="barra_superior" class="fila cuatro-celdas">
 	<div id="logo" class="celda ancho1">
-		<img src="/static/img/pedido.jpg" clas="ancho1">
+		<img src="/static/img/pedido-logo.png" clas="ancho1">
 	</div>
 	<div id="fila_superior" class="celda ancho3">
 		<p id="titulo" style="font-size: 24px; margin-bottom: 35px;">

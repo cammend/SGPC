@@ -3,6 +3,7 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block principal%}
+	<section class="seccion_normal">
 	<h1>Gestión del Sistema</h1>
 	<p><strong>Para poder usar el sistema es necesario realizar algunas tareas previas.</strong></p>
 	<ol  style="margin-left: 20px;">
@@ -16,4 +17,5 @@
 		<li>Registrar transiciones hace referencia a los posibles 'caminos' que puede tomar un pedido en gestión. Un 'estado' no necesariamente tiene 1 solo 'estado siguiente', sino que, puede tener varios 'estados siguientes'. Con ésto queda claro que el camino de un pedido desde que inicia hasta que termina no será igual para todos los pedidos.</li>
 		<li>Las prioridades hacen referencia a las cotizaciones. A la hora de gestionar y agregar una prioridad a una cotización sólo estarán disponibles las prioridades aquí registradas. Un ejemplo de prioridades sería (Alta, Normal y Baja).</li>
 	</ol>
+	</section>
 {%endblock%}

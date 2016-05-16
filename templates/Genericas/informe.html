@@ -3,14 +3,19 @@
 {%block titulo%}Lista{%endblock%}
 
 {%block principal%}
-<h2>{%if h2%}{{h2}}{%else%}Historial{%endif%}</h2>
-{%if pedido%}
-	<p><strong>Pedido: </strong>{{pedido}}</p>
-	{%for h in historial%}
-		<br>
-		<p><strong>Estado: </strong>{{h.transicion.estadoActual}}</p>
-		<p><strong>Usuario: </strong>{{h.usuario}}</p>
-		<p><strong>Fecha: </strong>{{h.fecha}}</p>
-	{%endfor%}
-{%endif%}
+<section class="seccion_normal">
+	<h2>{%if h2%}{{h2}}{%else%}Historial{%endif%}</h2>
+	{%if pedido%}
+		<p><strong>Pedido: </strong>{{pedido}}</p>
+		{%for h in historial%}
+			<br>
+			<div style="border-bottom: 1px solid #c1c1c1; padding-bottom: 5px;">
+			<p><strong>El pedido {{h.transicion.descripcion}}. Aprobado por el usuario "{{h.usuario}}"</strong></p>
+			<p><u>Fecha:</u> {{h.fecha}}</p>
+			<p><u>Estado Anterior:</u> {{h.transicion.estadoActual}}</p>
+			<p><u>Estado Actual:</u> {{h.transicion.estadoSiguiente}}</p>
+			</div>
+		{%endfor%}
+	{%endif%}
+</section>
 {%endblock%}

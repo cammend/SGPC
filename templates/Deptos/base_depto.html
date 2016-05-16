@@ -4,6 +4,11 @@
 
 {%block nav%}
 <h2 class="contenido">{{request.user.get_depto}}</h2>
+<header>
+<div class="menu_bar">
+ 	<a  class="bt-menu"><span class="icon-menu-list"></span>Menu</a>
+</div>
+<nav>
 <ul class="menu contenido">
 {%if request.user.es_admin%}
 	<li><a href="/sgpc/cuentas/">Ver Usuarios</a></li>
@@ -20,5 +25,7 @@
 	<li><a href="{{rec.url}}">{{rec.nombre}}</a></li>
 {%endfor%}
 </ul>
+</nav>
+</header>
 {%endif%}
 {%endblock%}

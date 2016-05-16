@@ -3,32 +3,46 @@
 {%block titulo%}Gestión de Usuarios{%endblock%}
 
 {%block nav%}
-<h2>Gestión</h2>
-<ol class="ol_nav">
-	<li><a href="/sgpc/cuentas/">Listar Usuario</a></li>
-	<li><a href="/sgpc/cuentas/nueva/">Agregar Usuario</a></li>
-	<li><a href="/sgpc/cuentas/eliminar/">Eliminar Usuario</a></li>
-</ol>
+<header>
+	<div class="menu_bar">
+	 	<a  class="bt-menu"><span class="icon-menu-list"></span>Menu</a>
+	</div>
+	<nav>
+		<ul>
+			<li><h4>Gestión</h4></li>
+			{%if request.user.get_depto%}
+			<li><a href="{{request.user.get_url_home}}">Inicio</a></li>
+			{%else%}
+			<li><a href="/sgpc/root/">Inicio</a></li>
+			{%endif%}
+			<li><a href="/sgpc/cuentas/">Listar Usuario</a></li>
+			<li><a href="/sgpc/cuentas/nueva/">Agregar Usuario</a></li>
+			<li><a href="/sgpc/cuentas/eliminar/">Eliminar Usuario</a></li>
+		</ul>
+	</nav>
+</header>
 {%endblock%}
 
 {%block principal%}
-<h2 style="margin-bottom: 15px;">{{h1}}</h2>
-{% if lista %}
-	<ol>
-	{% for l in lista %}
-	<li>
-		<h3>{{l.usuario}}</h3>
-		<ul style="margin-left: 40px; margin-bottom: 10px;">
-			<li><strong>Nombres: </strong>{{l.usuario.get_nombres}}</li>
-			<li><strong>Apellidos: </strong>{{l.usuario.get_apellidos}}</li>
-			<li><strong>Correo: </strong>{{l.usuario.get_correo}}</li>
-			<li><strong>Departamento: </strong>{{l.depto}}</li>
-			<li><strong>Tipo de Usuario: </strong>{{l.usuario.get_tipo}}</li>
-		</ul>
-	</li>
-	{% endfor %}
-	</ol>
-{%else%}
-<p>No hay usuarios registrados</p>
-{% endif%}
+<section class="seccion_lista">
+	<h2 style="margin-bottom: 15px;">{{h1}}</h2>
+	{% if lista %}
+		<ol>
+		{% for l in lista %}
+		<li>
+			<h3>{{l.usuario}}</h3>
+			<ul style="margin-left: 40px; margin-bottom: 10px;">
+				<li><strong>Nombres: </strong>{{l.usuario.get_nombres}}</li>
+				<li><strong>Apellidos: </strong>{{l.usuario.get_apellidos}}</li>
+				<li><strong>Correo: </strong>{{l.usuario.get_correo}}</li>
+				<li><strong>Departamento: </strong>{{l.depto}}</li>
+				<li><strong>Tipo de Usuario: </strong>{{l.usuario.get_tipo}}</li>
+			</ul>
+		</li>
+		{% endfor %}
+		</ol>
+	{%else%}
+	<p>No hay usuarios registrados</p>
+	{% endif%}
+</section>
 {%endblock%}
