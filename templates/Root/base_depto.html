@@ -3,10 +3,17 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block nav%}
-<h2>Gestión</h2>
-<ol style="margin-left: 30px;">
-	<li><a href="/sgpc/root/">Inicio</a></li>
-	<li><a href="/sgpc/root/lista_deptos/">Lista de Departamentos</a></li>
-	<li><a href="/sgpc/root/nuevo_depto/">Nuevo Departamento</a></li>
-</ol>
+<header>
+	<div class="menu_bar">
+	 	<a  class="bt-menu"><span class="icon-menu-list"></span>Menu</a>
+	</div>
+	<nav>
+		<ul>
+			<li><h4>Gestión</h4></li>
+			<li><a href="/sgpc/root/">Inicio</a></li>
+			<li><a href="/sgpc/root/lista_deptos/">Lista de Departamentos</a></li>
+			<li><a href="/sgpc/root/nuevo_depto/">Nuevo Departamento</a></li>
+		</ul>
+	</nav>
+</header>
 {%endblock%}

@@ -12,6 +12,8 @@ from apps.Transicion.models import *
 from apps.Pedido.forms import FormRenglon
 from apps.Cotizacion.forms import FormProductoCotizado
 from django.db.models import Q
+from apps.Comentarios.forms import FormComentarioPedido, FormComentarioCot
+from apps.Comentarios.models import Observacion
 
 # Create your views here.
 
@@ -60,6 +62,7 @@ def get_form_gestion(id_estado, pedido):
 	p_cots = pedido.cotizacion_set.all()
 	if id_estado == 1: #No Publicado
 		if p_prods:
+			print(p_prods)
 			return form
 	elif id_estado == 2: #Publicado
 		for p in p_prods:
@@ -320,13 +323,23 @@ class Listar(BaseSGPC, ListView):
 	def get_context_data(self, **kwargs):
 		context = super(Listar, self).get_context_data(**kwargs)
 		print("LPG: objects_list: " +str(self.object_list))
+		pedido = None
 		if self.object_list:
-			p, form = get_p_y_form(self.kwargs['estado'], self.object_list[0])
+			try:
+				num = int(self.request.GET['page'])
+				pedido = self.object_list[num-1]
+			except:
+				pedido = self.object_list[0]
+			p, form = get_p_y_form(self.kwargs['estado'], pedido)
 			context['form_gestion'] = form
+			context['id_pedido'] = pedido.id
 			context['parrafo'] = p
 			context['h2'] = 'Pedido "'+ get_estado(self.kwargs['estado']).nombre +'"'
 			context['form_renglon'] = FormRenglon()
 			context['form_cotizar'] = FormProductoCotizado()
+			context['coments_pedido'] = Observacion.objects.filter(pedido=pedido)
+			context['form_cot'] = FormComentarioCot()
+			context['form_pedido'] = FormComentarioPedido()
 		return context
 
 class Actualizar(BaseSGPC, UpdateView):

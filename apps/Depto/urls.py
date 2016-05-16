@@ -7,6 +7,7 @@ from .views import (
 	verSeguimiento,
 	ListaInforme, DetalleInforme,
 )
+from apps.Comentarios.views import ComentarioPedido, ComentarioCot
 
 urlpatterns = patterns('',
 	url(r'^(?P<depto>[-\w]+)/pedido/(?P<estado>[-\w]+)/$', ListarDeptoEstado.as_view()),
@@ -40,4 +41,6 @@ urlpatterns = patterns('',
 	url(r'^(?P<depto>[-\w]+)/informes/$', ListaInforme),
 	url(r'^(?P<depto>[-\w]+)/informes/(?P<id>[-\w]+)/$', DetalleInforme),
 
+	url(r'^(?P<depto>[-\w]+)/comentar_pedido/$', ComentarioPedido),
+	url(r'^(?P<depto>[-\w]+)/comentar_cotizacion/$', ComentarioCot),
 )

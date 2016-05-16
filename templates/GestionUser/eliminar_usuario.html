@@ -3,24 +3,28 @@
 {%block titulo%}Nuevo Usuario{%endblock%}
 
 {%block principal%}
-<h2>{{h1}}</h2>
-{%if p%}
-<p>{{p}}</p>
-{%else%}
-<p>Solo se pueden eliminar los usuarios siguientes:</p>
-{%endif%}
-{%if lista%}
-<ul>
-	{%for l in lista%}
-	<li>
-	<form method="post" action="/sgpc/cuentas/eliminar/advertencia/"> {%csrf_token%}
-	<label>
-<strong>Alias: </strong>{{l.usuario}} {%if is_root%}<strong>Depto: </strong> {{l.depto}} {%endif%}-> 
-	</label>
-	<input style="display:none;" name="usuario" type="text" value="{{l.usuario.id}}"></input>
-	<input type="submit" value="Eliminar"></input></form>
-	</li>
-	{%endfor%}
-</ul>
-{%endif%}
+<section class="seccion_normal">
+	<h2>{{h1}}</h2>
+	{%if p%}
+	<p>{{p}}</p>
+	{%else%}
+	<p>Solo se pueden eliminar los usuarios siguientes:</p>
+	{%endif%}
+</section>
+<section class="seccion_lista">
+	{%if lista%}
+	<ul>
+		{%for l in lista%}
+		<li>
+		<form method="post" action="/sgpc/cuentas/eliminar/advertencia/"> {%csrf_token%}
+		<label>
+	<strong>Alias: </strong>{{l.usuario}} {%if is_root%}<strong>Depto: </strong> {{l.depto}} {%endif%}-> 
+		</label>
+		<input style="display:none;" name="usuario" type="text" value="{{l.usuario.id}}"></input>
+		<input type="submit" value="Eliminar"></input></form>
+		</li>
+		{%endfor%}
+	</ul>
+	{%endif%}
+</section>
 {%endblock%}

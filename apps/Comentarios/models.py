@@ -9,7 +9,7 @@ class Comentario(models.Model):
 	cotizacion = models.ForeignKey(Cotizacion, verbose_name='Cotización')
 	titulo = models.CharField(max_length=25,verbose_name='Título')
 	descripcion = models.TextField(verbose_name='Descripción')
-	fecha = models.DateField()
+	fecha = models.DateField(auto_now=True)
 
 	def __str__(self):
 		return self.titulo
@@ -19,7 +19,7 @@ class Observacion(models.Model):
 	pedido = models.ForeignKey(Pedido)
 	titulo = models.CharField(max_length=25,verbose_name='Título')
 	descripcion = models.TextField(verbose_name='Descripción')
-	fecha = models.DateField()
+	fecha = models.DateField(auto_now=True)
 
 	def __str__(self):
 		return self.titulo

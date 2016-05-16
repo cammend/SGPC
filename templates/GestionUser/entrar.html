@@ -2,18 +2,22 @@
 
 {%block titulo%}Nuevo Usuario{%endblock%}
 
-{%block body%}
-<body id="bodylog">
-<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+{%block encabezado%}
 <script src="/static/js/index.js"></script>
 <script src="/static/js/prefixfree.min.js"></script>
-<div class="wrapper fila una-celda">
-	<form method="post" class="login" class=" ancho1 ancho-var"> {%csrf_token%}
-	    <p class="title">Iniciar Sesión </p>
-		{{form.as_p}}
-	{%if next%}<button type="hidden" name="next" value="{{next}}"><i class="spinner"></i></button>{%endif%}
-		<button type="submit" ><span class="state">INGRESAR</span></button>
-	</form>
+<link rel="stylesheet" href="/static/css/icono.css">
+<script type="text/javascript" src="/static/js/inserta_icono.js"></script>
+{%endblock%}
+
+{%block body%}
+<div id="bodylog">
+	<div class="wrapper fila una-celda">
+		<form method="post" class="login ancho1 ancho-var" id="form_inicio"> {%csrf_token%}
+		    <p class="title">Iniciar Sesión </p>
+			{{form.as_p}}
+		{%if next%}<button type="hidden" name="next" value="{{next}}"><i class="spinner"></i></button>{%endif%}
+			<button type="submit" ><span class="state">INGRESAR</span></button>
+		</form>
+	</div>
 </div>
-</body>
 {%endblock%}
