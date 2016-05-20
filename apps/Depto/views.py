@@ -383,6 +383,7 @@ class CrearPedido(Crear):
 		context = super(CrearPedido, self).get_context_data(**kwargs)
 		context['h2'] = 'Nuevo Pedido'
 		context['value_input'] = 'Crear Pedido'
+		context['calendar'] = True
 		return context
 
 #Clase para editar los pedidos "No Publicados"
@@ -593,18 +594,42 @@ def seleccionarCotizacion(request, depto, estado, key, id):
 def verSeguimiento(request, depto):
 	depto = get_depto(depto)
 	users = DeptoUser.objects.filter(depto=depto).values('usuario')
-	pedidos = Pedido.objects.filter()
+	#todos los pedidos de mi depto
+	pedidos = Pedido.objects.filter(usuario=users)
+	#todos los productos de mi depto
+	productos = Producto.objects.filter(pedido=pedidos)
+	#todas las cotizaciones de mi depto
+	cotizaciones = Cotizacion.objects.filter(pedido=pedidos)
+
+	prod = []
 	pes = []
+	cot = []
 	if request.method == 'POST':
 		buscar = request.POST['busqueda'].split(' ')
-		print(buscar)
+		print("BUSQUEDA: "+str(buscar))
 		for b in buscar:
-			pedidos = Pedido.objects.filter()
-			for p in pedidos:
+			#buscando en la justificación del pedido
+			pedidos_q = pedidos.filter(
+				Q(justificacion__contains=b)
+			)
+			for p in pedidos_q:
 				pes.append(p)
-	ctx = {'object_list':pes}
+			#buscando en la descripcion del producto
+			productos_q = productos.filter(
+				Q(descripcion__contains=b)
+			)
+			for p in productos_q:
+				prod.append(p)
+			#buscando en el proveedor de la cotizacion
+			cotizaciones_q = cotizaciones.filter(
+				Q(proveedor__contains=b)
+			)
+			for c in cotizaciones_q:
+				cot.append(c)
+	ctx = {'pedidos':pes,'productos':prod,'cotizaciones':cot,'b':buscar}
+	ctx['h2'] = 'Búsqueda'
 
-	return render(request, 'Genericas/list.html', ctx)
+	return render(request, 'Genericas/search.html', ctx)
 
 class VerSeguimiento(Listar):
 	template_name = 'Genericas/list.html'

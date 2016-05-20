@@ -148,10 +148,10 @@
 }
 .depto form input:first-child:focus{
   width: 250px;
-  -webkit-transition: all 0.5s ease;
-  -moz-transition: all 0.5s ease;
-  -o-transition: all 0.5s ease;
+  outline:none;
+  transition: all 0.15s ease-in-out;
 }
+.azul:focus {box-shadow: 0 0 5px rgba(0,0,255,1);border:1px solid rgba(0,0,255,0.8);}
 /*FIN BARRA DE DEPTO Y BÚSQUEDA*/
 
 .titulo_uno{
@@ -184,6 +184,7 @@
     -webkit-transition: all 0.5s ease;
     -moz-transition: all 0.5s ease;
     -o-transition: all 0.5s ease;
+    transition: all 0.15s ease-in-out;
  }
 
 #titulo{
@@ -246,7 +247,7 @@ text-decoration: underline;
 	box-sizing: border-box;
 	display: block;
 	margin: 0 auto;
-	width: 95%;
+	width: 100%;
 	padding: 1px;
 }
 .form_estilo_1 p input{
@@ -601,4 +602,21 @@ header nav {
 .info h2{
   text-shadow: 1px 1px 2px #555;
   margin-bottom: 5px;
+}
+
+#id_fecha{
+  float: left;
+  width: 90%;
+}
+#selector{
+  float: right;
+  width: 30px;
+}
+.p_fecha{
+  vertical-align: middle;
+}
+
+
+.center{
+  text-align: center;
 }

@@ -4,13 +4,59 @@
 
 {%block principal%}
 <section class="seccion_normal">
-	<h2>{%if h2%}{{h2}}{%else%}Historial{%endif%}</h2>
-	{%if pedido%}
-		<p><strong>Pedido: </strong>{{pedido}}</p>
+<h2 style="border-bottom: 1px solid #a1a1a1; padding: 2px 5px; background: #e1e1e1">
+{%if h2%}{{h2}}{%else%}Historial{%endif%}
+</h2>
+<div class="fila dos-celdas" style="border-bottom: 1px solid #c1c1c1; padding: 2px 5px; background-color: #f1f1f1;">
+	<div class="celda ancho1">
+		{%if pedido%}
+		<div >
+			<p><strong>ID Pedido: </strong>{{pedido.id}}</p>
+			<p><u>Usuario:</u> {{pedido.usuario}}</p>
+			<p><u>Departamento:</u> {{pedido.usuario.get_depto}}</p>
+			<p><u>Fecha:</u> {{pedido.fecha}}</p>
+			<p><u>Justificación:</u> {{pedido.justificacion}}</p>
+			<p><u>Estado:</u> {{pedido.estado}}</p>
+			<div style="margin-left: 15px;">
+			<ol>
+				{%for producto in pedido.producto_set.all%}
+					<li>
+					<p><strong>Id Producto:</strong> {{producto.id}}</p>
+					<p><u>Descripción:</u> {{producto.descripcion}}</p>
+					<p><u>Cantidad:</u> {{producto.cantidad}}</p>
+					</li>
+				{%endfor%}
+			</ol>
+			</div>
+		</div>
+	</div>
+	<div class="celda ancho1">
+		<div style="border-left: 1px solid #c1c1c1; padding-left: 5px;">
+			{%for cotizacion in pedido.cotizacion_set.all%}
+				<p><strong>Id Cotización:</strong> {{cotizacion.id}}</p>
+				<p><u>Proveedor:</u> {{cotizacion.proveedor}}</p>
+				<p><u>Fecha de Cotización:</u> {{cotizacion.fecha_cotizacion}}</p>
+				<p><u>Fecha de Entrega:</u> {{cotizacion.fecha_entrega}}</p>
+				<div style="margin-left: 15px;">
+					<ol>
+						{%for prod in cotizacion.productoscotizados_set.all%}
+						<li>
+							<p><strong>Id Producto:</strong> {{prod.producto.id}}</p>
+							<p><u>Cantidad:</u> {{prod.cantidad}}</p>
+							<p><u>Precio:</u> {{prod.precio}}</p>
+							<p><u>Total:</u> {{prod.total}}</p>
+						</li>
+						{%endfor%}
+					</ol>
+				</div>
+			{%endfor%}
+		</div>
+	</div>
+</div>
 		{%for h in historial%}
 			<br>
-			<div style="border-bottom: 1px solid #c1c1c1; padding-bottom: 5px;">
-			<p><strong>El pedido {{h.transicion.descripcion}}. Aprobado por el usuario "{{h.usuario}}"</strong></p>
+			<div style="border-bottom: 1px solid #c1c1c1; padding: 2px 5px;">
+			<p><strong>El pedido {{h.transicion.descripcion}}. Gestionado por el usuario "{{h.usuario}}".</strong></p>
 			<p><u>Fecha:</u> {{h.fecha}}</p>
 			<p><u>Estado Anterior:</u> {{h.transicion.estadoActual}}</p>
 			<p><u>Estado Actual:</u> {{h.transicion.estadoSiguiente}}</p>

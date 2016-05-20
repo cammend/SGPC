@@ -16,4 +16,17 @@
 </form>
 </div>
 </div>
+{%if calendar%}
+<script type="text/javascript">
+	window.onload = function() {
+	$('#id_fecha').parent().addClass('p_fecha');
+	$('#id_fecha').parent().append("<img src='/static/img/calendar.gif' id='selector' />");
+	  Calendar.setup({
+	    inputField: "id_fecha",
+	    ifFormat:   "%d/%m/%Y",
+	    button:     "selector"
+	  });
+	}
+</script>
+{%endif%}
 {%endblock%}
