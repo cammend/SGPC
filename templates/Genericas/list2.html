@@ -95,7 +95,7 @@
                   {%if estado = 2%}
                     {%if producto.renglon%}
                       <strong>Renglón Presupuestario: </strong>{{producto.renglon}}
-                      <a href="editar_renglon/{{producto.id}}/">Editar Renglón</a> </br>
+                      <a href="editar_renglon/{{producto.id}}/" id="editar_renglon">Editar Renglón</a> </br>
                     {%else%}
                       <form id="f_renglon" method="post" action="asignar_renglon/"> {%csrf_token%}
                         {{form_renglon.as_p}}
