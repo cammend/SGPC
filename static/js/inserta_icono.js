@@ -13,13 +13,19 @@ $('#id_correo').attr({placeholder : "Ingrese su correo Electronico"});
 $('#id_password1').attr({placeholder : "Ingrese Contraseña"});
 $('#id_password2').attr({placeholder : "Repita Contraseña"});
 
-
 $('#id_fecha').datepicker({
 				changeMonth:true,
-				changeYear:true,
-								
+				changeYear:true,								
 		
 			});
-
-
+$('#id_fecha_cotizacion').datepicker({
+				changeMonth:true,
+				changeYear:true,
+		
+			});
+$('#id_fecha_entrega').datepicker({
+				changeMonth:true,
+				changeYear:true,
+		
+			});
 });
