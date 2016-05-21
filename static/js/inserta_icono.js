@@ -20,6 +20,6 @@ $('#id_fecha').datepicker({
 								
 		
 			});
-alert("hola")
+
 
 });
