@@ -99,5 +99,5 @@ function show_cot(id){
 
 //añadir calendario
 function addCelendar(){
-	$('p').append("<img src='/static/img/calendar.gif' id='selector' />")
+	$('#id_fecha').parent().append("<img src='/static/img/calendar.gif' id='selector' />")
 }

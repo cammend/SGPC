@@ -1,0 +1,46 @@
+{%extends 'Genericas/base.html'%}
+
+{%block titulo%}Lista{%endblock%}
+
+{%block principal%}
+<section class="seccion_lista">
+	<h2>{%if h2%}{{h2}}{%else%}Búsqueda{%endif%}
+	({%for s in b%}
+		{{s}}
+	{%endfor%})
+	</h2>
+	<ul>
+	{%for p in pedidos%}
+		<li>
+			<p><a href="/sgpc/{{request.user.get_depto_url}}/informes/{{p.id}}/">Id Pedido: {{p.id}}</a></p>
+			<p><u>Justificación:</u> 
+			{{p.justificacion}}
+			</p>
+		</li>
+	{%endfor%}
+	{%for p in productos%}
+		<li>
+			<a href="/sgpc/{{request.user.get_depto_url}}/informes/{{p.pedido.id}}/">Id Pedido: {{p.pedido.id}}</a>
+			<p><u>Producto ({{p.id}}):</u>
+			{{p.descripcion}}
+			</p>
+		</li>
+	{%endfor%}
+	{%for c in cotizaciones%}
+		<li>
+			<a href="/sgpc/{{request.user.get_depto_url}}/informes/{{c.pedido.id}}/">Id Pedido: {{c.pedido.id}}</a>
+			<p><u>Cotización: ({{c.id}}):</u>
+			{{c.proveedor}}
+			</p>
+		</li>
+	{%endfor%}
+	</ul>
+
+	{%if not pedidos and not productos and not cotizaciones%}
+		<p>No se encotraron resultados.</p>
+	{%endif%}
+
+</section>
+<script type="text/javascript">
+</script>
+{%endblock%}

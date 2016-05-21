@@ -3,12 +3,16 @@
 {%block titulo%}{{titulo}}{%endblock%}
 
 {%block nav%}
-<section class="depto">
-<h2 >{{request.user.get_depto}}</h2>
-<form>
-	<input type="text" placeholder="buscar pedido" />
-	<input type="submit" value="Buscar" />
-</form>
+<section class="depto fila dos-celdas">
+<div class="celda ancho1 center">
+	<h2 >{{request.user.get_depto}}</h2>
+</div>
+<div class="celda ancho1 center">
+	<form action="/sgpc/{{request.user.get_depto_url}}/buscar/" method="post">{%csrf_token%}
+		<input type="text" placeholder="buscar pedido" name="busqueda"/>
+		<input type="submit" value="Buscar" />
+	</form>
+</div>
 </section>
 <header>
 <div class="menu_bar">
