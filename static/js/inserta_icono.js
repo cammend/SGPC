@@ -18,7 +18,8 @@ $('#id_fecha').datepicker({
 				changeMonth:true,
 				changeYear:true,
 								
+		
 			});
-
+alert("hola")
 
 });
