@@ -17,7 +17,7 @@
       {%if form_gestion%}
       <form id="f_gestion" action="/sgpc/gestionar_pedido/" method="post">{%csrf_token%}
         {{form_gestion.as_p}}
-        <input type="hidden" name="id" value="{{pedido.id}}" />
+        <input type="hidden" name="id" value="{{id_pedido}}" />
         <input type="submit" value="Gestionar" />
       </form>
       {%endif%}

@@ -21,7 +21,7 @@ $('#id_fecha').datepicker({
 $('#id_fecha_cotizacion').datepicker({
 				changeMonth:true,
 				changeYear:true,
-		
+				
 			});
 $('#id_fecha_entrega').datepicker({
 				changeMonth:true,
