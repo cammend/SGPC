@@ -97,7 +97,7 @@
                   {%if estado = 2%}
                     {%if producto.renglon%}
                       <strong>Renglón Presupuestario: </strong>{{producto.renglon}}
-                      <a href="editar_renglon/{{producto.id}}/" >Editar Renglón</a> </br>
+                      <a id="a" href="editar_renglon/{{producto.id}}/" >Editar Renglón</a> </br>
                     {%else%}
                       <form id="f_renglon" method="post" action="asignar_renglon/"> {%csrf_token%}
                         {{form_renglon.as_p}}
@@ -227,7 +227,7 @@
     <div class="pagination" style="margin-top: 30px; margin-left: 30px;">
       <span class="step-links">
           {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+              <a href="?page={{ page_obj.previous_page_number }}"><span class="icon-undo2"></span></a>
           {% endif %}
 
           <span class="current">
@@ -235,7 +235,7 @@
           </span>
 
           {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+              <a href="?page={{ page_obj.next_page_number }}"><span class="icon-redo2"></a>
           {% endif %}
       </span>
     </div>
