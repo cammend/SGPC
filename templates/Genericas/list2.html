@@ -78,11 +78,13 @@
 
     <!-- Datos de los productos -->
     <div id="datos_producto">
-      <h2 class="titulo_uno">Productos</h2>
+      <h2   class="titulo_uno">Productos</h2>
       {%if estado == 1%}
-        <div id="agregar_producto">
-          <a href="{{pedido.id}}/agregar_producto/">Agregar</a>
+        <div  id="agregar_producto">
+          <a   href="{{pedido.id}}/agregar_producto/"><span style="color: black; font-size:25px;"                class=" icon-plus"></span></a>
         </div>
+      
+
       {%endif%}
       {% if pedido.producto_set.all%}
         <ol>
@@ -116,8 +118,8 @@
               </div>
               {%if estado == 1 %}
               <div id="edicion_productos">
-                <a href="{{pedido.id}}/producto/{{producto.id}}/editar/">Editar</a>
-                <a href="{{pedido.id}}/producto/{{producto.id}}/eliminar/">Eliminar</a>
+                <a href="{{pedido.id}}/producto/{{producto.id}}/editar/"><span class="icon-pencil2"></span>  Editar</a>
+                <a href="{{pedido.id}}/producto/{{producto.id}}/eliminar/"><span class="icon-bin"></span> Eliminar</a>
               </div>
               {%endif%}
             </li>
