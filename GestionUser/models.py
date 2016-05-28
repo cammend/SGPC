@@ -139,7 +139,12 @@ class Usuario(AbstractBaseUser):
 
 	def get_estado(self):
 		if self.tipoUser == 0: return None
-		return EstadoDepto.objects.get(depto=self.get_depto()).estado
+		estado = None
+		try:
+			estado = EstadoDepto.objects.get(depto=self.get_depto()).estado
+		except:
+			return None
+		return estado
 
 	def get_estado_url(self):
 		if self.tipoUser == 0: return None
@@ -153,6 +158,8 @@ class Usuario(AbstractBaseUser):
 			return '/sgpc/root/'
 		depto_url = self.get_depto_url()
 		estado_url = self.get_estado_url()
+		if estado_url == 'none':
+			return '/sgpc/'+depto_url+'/pedido/no_publicado/'
 		return '/sgpc/'+depto_url+'/pedido/'+estado_url+'/gestion/'
 
 class DeptoUser(models.Model):
