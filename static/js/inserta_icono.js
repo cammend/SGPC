@@ -1,7 +1,6 @@
 $(document).ready(function(){
-$('#form_inicio p:nth-child(3)').append('<i class="fa icon-user"></i>');
-
-$('#form_inicio p:nth-child(4)').append('<i class="fa icon-key"></i>');
+$('#id_username').parent().append('<i class="fa icon-user"></i>');
+$('#id_password').parent().append('<i class="fa icon-key"></i>');
 
 $('#id_username').attr({placeholder : "Usuario"});
 $('#id_password').attr({placeholder : "Ingrese Contraseña"});

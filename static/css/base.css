@@ -464,7 +464,15 @@ footer{
 
 .errorlist{
   color:red;
-  margin:10px;
+  list-style: none;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ff2222;
+  text-align: justify;
+  border-radius: 3px;
+}
+.errorlist li{
+  margin: 0;
 }
 
 /*fin inicio de session*/
