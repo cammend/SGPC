@@ -78,14 +78,14 @@
 
     <!-- Datos de los productos -->
     <div id="datos_producto">
-      <h2   class="titulo_uno">Productos</h2>
+    <div style="background:#b2b2ff; padding: 5px; " >
+      <h2 style="display: inline"   class="titulo_uno">Productos</h2>
       {%if estado == 1%}
         <div  id="agregar_producto">
-          <a   href="{{pedido.id}}/agregar_producto/"><span style="color: black; font-size:25px;"                class=" icon-plus"></span></a>
-        </div>
-      
-
+          <a  href="{{pedido.id}}/agregar_producto/"><span style="color: black; font-size:20px;"                class=" icon-plus"></span></a>
+        </div>   
       {%endif%}
+      </div>
       {% if pedido.producto_set.all%}
         <ol>
       		{%for producto in pedido.producto_set.all%}

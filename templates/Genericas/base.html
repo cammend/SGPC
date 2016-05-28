@@ -21,7 +21,7 @@
 </div>
 <nav>
 <ul >
-	<li><a href="{{request.user.get_url_home}}">Inicio</a></li>
+	<li><a href="{{request.user.get_url_home}}"><span class="icon-home"></span>Inicio</a></li>
 {%if request.user.es_admin%}
 	<li><a href="/sgpc/cuentas/"><span class="icon-users"></span>Ver Usuarios</a></li>
 {%endif%}
