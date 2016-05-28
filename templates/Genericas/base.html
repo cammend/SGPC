@@ -9,7 +9,8 @@
 </div>
 <div class="celda ancho1 center">
 	<form action="/sgpc/{{request.user.get_depto_url}}/buscar/" method="post">{%csrf_token%}
-		<input type="text" placeholder="buscar pedido" name="busqueda"/>
+	    <span style="color: black;" class="icon-search"></span>
+		<input  type="text" placeholder="buscar pedido" name="busqueda" ></input>
 		<input type="submit" value="Buscar" />
 	</form>
 </div>

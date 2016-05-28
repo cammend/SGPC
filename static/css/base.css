@@ -655,7 +655,7 @@ a{
   text-decoration:none;
 }
 
-#edicion_productos,#agregar_cotizacion a{
+#edicion_productos a{
     background: #b2b2ff;
     color: #343434;
     display: inline-block;
@@ -668,7 +668,7 @@ a{
     border-radius: 4px;
     
 }
-#edicion_productos,#agregar_cotizacion a:hover{
+#edicion_productos a:hover{
  box-shadow: 0px 0px 0px;
  padding-top: 3px;
 }
@@ -705,6 +705,25 @@ a{
     
 }
 #datos_producto #a:hover{
+ box-shadow: 0px 0px 0px;
+ padding-top: 3px;
+}
+
+#agregar_cotizacion a{
+    background: #b2b2ff;
+    color: #343434;
+    display: inline-block;
+    font-size: 1em;
+    margin: 10px;
+    padding: 5px 0px;
+    text-align: center;
+    width: 100px;
+    box-shadow: 0px 3px 0px #A49191;
+    border-radius: 4px;
+    
+}
+
+#agregar_cotizacion a:hover{
  box-shadow: 0px 0px 0px;
  padding-top: 3px;
 }
