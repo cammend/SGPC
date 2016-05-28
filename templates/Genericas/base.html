@@ -20,6 +20,7 @@
 </div>
 <nav>
 <ul >
+	<li><a href="{{request.user.get_url_home}}">Inicio</a></li>
 {%if request.user.es_admin%}
 	<li><a href="/sgpc/cuentas/">Ver Usuarios</a></li>
 {%endif%}
