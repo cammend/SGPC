@@ -11,13 +11,13 @@
 		<ul>
 			<li><h4>Gestión</h4></li>
 			{%if request.user.get_depto%}
-			<li><a href="{{request.user.get_url_home}}">Inicio</a></li>
+			<li><a  href="{{request.user.get_url_home}}"><span class="icon-home"></span>Inicio</a></li>
 			{%else%}
-			<li><a href="/sgpc/root/">Inicio</a></li>
+			<li><a href="/sgpc/root/"><span class="icon-home"></span>Inicio</a></li>
 			{%endif%}
-			<li><a href="/sgpc/cuentas/">Listar Usuario</a></li>
-			<li><a href="/sgpc/cuentas/nueva/">Agregar Usuario</a></li>
-			<li><a href="/sgpc/cuentas/eliminar/">Eliminar Usuario</a></li>
+			<li><a href="/sgpc/cuentas/"><span class="icon-profile"></span>Listar Usuario</a></li>
+			<li><a href="/sgpc/cuentas/nueva/"><span class="icon-plus"></span> Agregar Usuario</a></li>
+			<li><a href="/sgpc/cuentas/eliminar/"><span class="icon-bin"></span>Eliminar Usuario</a></li>
 		</ul>
 	</nav>
 </header>

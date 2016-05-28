@@ -78,11 +78,13 @@
 
     <!-- Datos de los productos -->
     <div id="datos_producto">
-      <h2 class="titulo_uno">Productos</h2>
+      <h2   class="titulo_uno">Productos</h2>
       {%if estado == 1%}
-        <div id="agregar_producto">
-          <a href="{{pedido.id}}/agregar_producto/">Agregar</a>
+        <div  id="agregar_producto">
+          <a   href="{{pedido.id}}/agregar_producto/"><span style="color: black; font-size:25px;"                class=" icon-plus"></span></a>
         </div>
+      
+
       {%endif%}
       {% if pedido.producto_set.all%}
         <ol>
@@ -95,7 +97,7 @@
                   {%if estado = 2%}
                     {%if producto.renglon%}
                       <strong>Renglón Presupuestario: </strong>{{producto.renglon}}
-                      <a href="editar_renglon/{{producto.id}}/" >Editar Renglón</a> </br>
+                      <a id="a" href="editar_renglon/{{producto.id}}/" >Editar Renglón</a> </br>
                     {%else%}
                       <form id="f_renglon" method="post" action="asignar_renglon/"> {%csrf_token%}
                         {{form_renglon.as_p}}
@@ -116,8 +118,8 @@
               </div>
               {%if estado == 1 %}
               <div id="edicion_productos">
-                <a href="{{pedido.id}}/producto/{{producto.id}}/editar/">Editar</a>
-                <a href="{{pedido.id}}/producto/{{producto.id}}/eliminar/">Eliminar</a>
+                <a href="{{pedido.id}}/producto/{{producto.id}}/editar/"><span class="icon-pencil2"></span>  Editar</a>
+                <a href="{{pedido.id}}/producto/{{producto.id}}/eliminar/"><span class="icon-bin"></span> Eliminar</a>
               </div>
               {%endif%}
             </li>
@@ -225,7 +227,7 @@
     <div class="pagination" style="margin-top: 30px; margin-left: 30px;">
       <span class="step-links">
           {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+              <a href="?page={{ page_obj.previous_page_number }}"><span class="icon-undo2"></span></a>
           {% endif %}
 
           <span class="current">
@@ -233,7 +235,7 @@
           </span>
 
           {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+              <a href="?page={{ page_obj.next_page_number }}"><span class="icon-redo2"></a>
           {% endif %}
       </span>
     </div>

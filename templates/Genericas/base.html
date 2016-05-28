@@ -22,17 +22,17 @@
 <ul >
 	<li><a href="{{request.user.get_url_home}}">Inicio</a></li>
 {%if request.user.es_admin%}
-	<li><a href="/sgpc/cuentas/">Ver Usuarios</a></li>
+	<li><a href="/sgpc/cuentas/"><span class="icon-users"></span>Ver Usuarios</a></li>
 {%endif%}
-	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/no_publicado/nuevo/">Nuevo Pedido</a></li>
-	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/no_publicado/">Pedidos no Publicados</a></li>
-	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/con_cotizaciones_ordenadas/">Pedidos para comprar</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/no_publicado/nuevo/"><span class="icon-price-tag"></span> Nuevo Pedido</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/no_publicado/"><span class="icon-upload"></span>Pedidos no Publicados</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/con_cotizaciones_ordenadas/"><span class="icon-checkmark"></span>Pedidos para comprar</a></li>
 	{%if request.user.get_depto.id == 16%}
-	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/en_almacén/">Retirar pedidos del almacén</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/pedido/en_almacén/"> Retirar pedidos del almacén</a></li>
 	{%endif%}
-	<li><a href="/sgpc/{{user.get_depto_url}}/ver_seguimiento/">Ver seguimiento</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/ver_seguimiento/"><span class="icon-map"></span>Ver seguimiento</a></li>
 	{%if request.user.get_depto.id == 12%}
-	<li><a href="/sgpc/{{user.get_depto_url}}/informes/">Informes</a></li>
+	<li><a href="/sgpc/{{user.get_depto_url}}/informes/"><span class="icon-menu"></span>Informes</a></li>
 	{%endif%}
 </ul>
 </nav>
