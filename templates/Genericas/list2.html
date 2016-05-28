@@ -62,9 +62,9 @@
       <a id="titulo_pedido" href="#"><h2 class="titulo_uno">{{h2}}</h2></a>
       {%if estado == 1%}
         <div id="edicion_pedido">
-        <a href="{{pedido.id}}/editar_pedido/">Editar</a>
-        <a href="{{pedido.id}}/eliminar_pedido/">Eliminar</a>
-        <a href="{{pedido.id}}/comentarios/">Comentarios</a>
+        <a href="{{pedido.id}}/editar_pedido/"><span style="margin: 5px" class="icon-pencil2"></span>Editar</a>
+        <a href="{{pedido.id}}/eliminar_pedido/"><span style="margin: 5px" class="icon-bin"></span>Eliminar</a>
+        <a href="{{pedido.id}}/comentarios/"><span style="margin: 5px" class="icon-twitch"></span>Comentarios</a>
         </div>
       {%endif%}
       <ul>
@@ -97,7 +97,7 @@
                   {%if estado = 2%}
                     {%if producto.renglon%}
                       <strong>Renglón Presupuestario: </strong>{{producto.renglon}}
-                      <a id="a" href="editar_renglon/{{producto.id}}/" >Editar Renglón</a> </br>
+                      <a id="a" href="editar_renglon/{{producto.id}}/"><span style="margin: 5px;" class="icon-pencil2"></span>Editar Renglón</a> </br>
                     {%else%}
                       <form id="f_renglon" method="post" action="asignar_renglon/"> {%csrf_token%}
                         {{form_renglon.as_p}}
@@ -135,7 +135,7 @@
       {% endif%}
       {%if estado == 4%}
         <div id="agregar_cotizacion">
-          <a href="agregar_cotizacion/{{pedido.id}}/">Agregar</a>
+          <a href="agregar_cotizacion/{{pedido.id}}/"><span style="margin: 5px" class="icon-plus"></span>Agregar</a>
         </div>
       {%endif%}
       {% if pedido.cotizacion_set.all %}
@@ -156,18 +156,18 @@
             </ol>
             {%if estado == 4%}
               <div id="edicion_cotizacion">
-                <a href="editar_cotizacion/{{cotizacion.id}}/">Editar</a>
-                <a href="eliminar_cotizacion/{{cotizacion.id}}/">Eliminar</a>
+                <a href="editar_cotizacion/{{cotizacion.id}}/"><span style="margin: 5px" class="icon-pencil2"></span>Editar</a>
+                <a href="eliminar_cotizacion/{{cotizacion.id}}/"><span style="margin: 5px" class="icon-bin"></span>  Eliminar</a>
               </div>
             {%elif estado == 5 and not cotizacion.prioridad%}
               <div id="edicion_cotizacion">
-                <a href="asignar_prioridad/{{cotizacion.id}}/">Asignar Prioridad</a>
+                <a href="asignar_prioridad/{{cotizacion.id}}/"><span style="margin: 5px;" class="icon-tree"></span> Asignar Prioridad</a>
               </div>
             {%else%}
               <strong>Prioridad: </strong> {{cotizacion.prioridad}}
               {%if estado == 5%}
                 <div id="edicion_cotizacion">
-                  <a href="asignar_prioridad/{{cotizacion.id}}/">Editar Prioridad</a>
+                  <a href="asignar_prioridad/{{cotizacion.id}}/"><span style="margin: 5px;" class="icon-pencil2"></span>Editar Prioridad</a>
                 </div>
               {%endif%}
               {%if estado == 6 and not cotizacion.aprobada%}

@@ -636,8 +636,8 @@ header nav {
 
 
 #id_fecha{
-  float: left;
-  width: 90%;
+  
+  width: 100%;
 }
 #selector{
   float: right;
@@ -655,13 +655,13 @@ header nav {
 #agregar_producto{
   display: inline-block;
   margin-left: 10px;
- 
 
 }
 
 a{
   text-decoration:none;
 }
+
 
 #edicion_productos a{
     background: #b2b2ff;
@@ -689,7 +689,7 @@ a{
     margin: 10px;
     padding: 5px 0px;
     text-align: center;
-    width: 100px;
+    width: 125px;
     box-shadow: 0px 3px 0px #A49191;
     border-radius: 4px;
     
@@ -732,6 +732,25 @@ a{
 }
 
 #agregar_cotizacion a:hover{
+ box-shadow: 0px 0px 0px;
+ padding-top: 3px;
+}
+
+#edicion_cotizacion a{
+    background: #b2b2ff;
+    color: #343434;
+    display: inline-block;
+    font-size: 1em;
+    margin: 10px;
+    padding: 5px 0px;
+    text-align: center;
+    width: 175px;
+    box-shadow: 0px 3px 0px #A49191;
+    border-radius: 4px;
+    
+}
+
+#edicion_cotizacion a:hover{
  box-shadow: 0px 0px 0px;
  padding-top: 3px;
 }
