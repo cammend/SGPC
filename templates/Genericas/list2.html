@@ -35,10 +35,12 @@
       </form>
       <div>
         <ol>
-          {%for com in coments_pedido%}
-            <li>
-              <p><strong>{{com.titulo}}</strong></p>
-              <p>{{com.descripcion}}</p>
+          {%for comment in coments_pedido%}
+            <li style="margin-bottom: 5px; border-bottom: 1px solid #bbb; padding: 2px;">
+              <p><u>Usuario: </u>{{comment.usuario}}</p>
+              <p><u>Fecha: </u>{{comment.fecha}}</p>
+              <p><u>Título: </u>{{comment.titulo}}</p>
+              <p><u>Mensaje: </u>{{comment.descripcion}}</p>
             </li>
           {%endfor%}
         </ol>
@@ -146,7 +148,7 @@
             {%endif%}>
             <ol class="lista_comment" id="comment_{{cotizacion.id}}" style="display: none;">
               {%for comment in cotizacion.comentario_set.all%}
-                <li>
+                <li style="margin-bottom: 5px; border-bottom: 1px solid #bbb; padding: 2px;">
                   <p><u>Usuario: </u>{{comment.usuario}}</p>
                   <p><u>Fecha: </u>{{comment.fecha}}</p>
                   <p><u>Título: </u>{{comment.titulo}}</p>
